@@ -5,18 +5,94 @@
  */
 package Game;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Date;
+import javax.swing.JTextArea;
+
 /**
  *
  * @author Maurice Ajluni
  */
 public class Server extends javax.swing.JFrame {
 
+    private JTextArea jta = new JTextArea();
+    
     /**
      * Creates new form Server
      */
     public Server() {
         initComponents();
+        
+        try {
+
+            // Create a server socket
+            ServerSocket serverSocket = new ServerSocket(8000);
+            jta.append("MultiThreadServer started at " + new Date() + '\n');
+
+            // Number a client
+            int clientNo = 1;
+
+            while (true) {
+
+              // Listen for a new connection request
+              Socket socket = serverSocket.accept();
+              // Create a new thread for the connection
+              HandleAClient task = new HandleAClient(socket);
+
+              // Start the new thread
+              new Thread(task).start();
+
+              // Increment clientNo
+              clientNo++;
+            }
+          }
+          catch(IOException ex) {
+            System.err.println(ex);
+          }
     }
+    
+    class HandleAClient implements Runnable {
+
+    private Socket socket; // A connected socket
+
+    /** Construct a thread */
+    public HandleAClient(Socket socket) {
+      this.socket = socket;
+    }
+
+    /** Run a thread */
+    public void run() {
+      try {
+ 
+        // Create data input and output streams
+        DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
+        DataOutputStream outputToClient = new DataOutputStream(socket.getOutputStream());
+
+        // Continuously serve the client
+        while (true) {
+
+          // Receive radius from the client
+          double radius = inputFromClient.readDouble();
+
+          // Compute area
+          double area = radius * radius * Math.PI;
+
+          // Send area back to the client
+          outputToClient.writeDouble(area);
+
+          jta.append("radius received from client: " + radius + '\n');
+          jta.append("Area found: " + area + '\n');
+        }
+      }
+      catch(IOException e) {
+        System.err.println(e);
+      }
+    }
+  }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,18 +103,30 @@ public class Server extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Battleship Server");
+        setName("window"); // NOI18N
         setPreferredSize(new java.awt.Dimension(1000, 500));
+
+        jLabel1.setText("Server");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(185, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(177, 177, 177))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel1)
+                .addContainerGap(262, Short.MAX_VALUE))
         );
 
         pack();
@@ -80,5 +168,6 @@ public class Server extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

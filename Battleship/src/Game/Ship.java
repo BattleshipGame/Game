@@ -6,6 +6,7 @@ public class Ship
     int size;
     Point[] coordinates;
     int[] hits;
+    String name;
     
     //Creates a new Ship with a Point[]
     public Ship(Point[] points)
@@ -13,6 +14,25 @@ public class Ship
         size = points.length;
         coordinates = points;
         hits = new int[size];
+        
+        switch(size)
+        {
+            case 2:
+                name = "";
+                break;
+            case 3:
+                name = "Submarine";
+                break;
+            case 4:
+                name = "Battleship";
+                break;
+            case 5:
+                name = "Carrier";
+                break;
+            default:
+                name = "Ship";
+                break;
+        }
     }
     
     //Determines if the Ship is sunk
