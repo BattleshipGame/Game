@@ -1,18 +1,21 @@
 package Game;
 
+//Represents a ship on the game board
 public class Ship
 {
     int size;
     Point[] coordinates;
     int[] hits;
     
-    public Ship(int size, Point[] points)
+    //Creates a new Ship with a Point[]
+    public Ship(Point[] points)
     {
-        this.size = size;
+        size = points.length;
         coordinates = points;
         hits = new int[size];
     }
     
+    //Determines if the Ship is sunk
     public boolean isSunk()
     {
         for(int i : hits)
@@ -22,11 +25,13 @@ public class Ship
         return true;
     }
     
+    //Returns the size of the Ship
     public int getSize()
     {
         return size;
     }
     
+    //Returns the Point[] of the Ship's coordinates
     public Point[] getCoordinates()
     {
         return coordinates;
