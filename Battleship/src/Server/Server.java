@@ -95,6 +95,7 @@ public class Server extends JFrame
                 // Continuously serve the client
                 while (true)
                 {
+                    boolean test = inputFromClient.readBoolean();
                     // Receive radius from the client
                     double radius = inputFromClient.readDouble();
 

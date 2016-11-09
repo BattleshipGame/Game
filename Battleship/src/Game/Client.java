@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Game;
 
 import java.io.*;
+import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
 
-/**
- *
- * @author Maurice Ajluni
- */
 public class Client extends javax.swing.JFrame {
 
     private int[][] playerBoard = new int[10][10];
@@ -18,12 +14,27 @@ public class Client extends javax.swing.JFrame {
     private ObjectInputStream fromServer;
     private String playerName;
     private Ship[] shipList = new Ship[5];
+    private JRadioButton[][] opponetBoard = new JRadioButton[10][10];
+    private ButtonGroup group = new ButtonGroup();
+    private Point target;
     
     /**
      * Creates new form Client
      */
     public Client() {
         initComponents();
+        addButtons();
+        
+        try
+        {
+            Socket socket = new Socket("localhost", 8000);
+            fromServer = new ObjectInputStream(socket.getInputStream());
+            toServer = new ObjectOutputStream(socket.getOutputStream());
+        }
+        catch(IOException ex)
+        {
+            System.err.println(ex.toString() + '\n');
+        }
     }
 
     /**
@@ -35,8 +46,111 @@ public class Client extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        opponentPanel = new javax.swing.JPanel();
+        opponentLabel = new javax.swing.JLabel();
+        radioPanel = new javax.swing.JPanel();
+        a1 = new javax.swing.JRadioButton();
+        b1 = new javax.swing.JRadioButton();
+        d1 = new javax.swing.JRadioButton();
+        c1 = new javax.swing.JRadioButton();
+        h1 = new javax.swing.JRadioButton();
+        e1 = new javax.swing.JRadioButton();
+        f1 = new javax.swing.JRadioButton();
+        g1 = new javax.swing.JRadioButton();
+        i1 = new javax.swing.JRadioButton();
+        j1 = new javax.swing.JRadioButton();
+        j2 = new javax.swing.JRadioButton();
+        a2 = new javax.swing.JRadioButton();
+        b2 = new javax.swing.JRadioButton();
+        d2 = new javax.swing.JRadioButton();
+        c2 = new javax.swing.JRadioButton();
+        e2 = new javax.swing.JRadioButton();
+        f2 = new javax.swing.JRadioButton();
+        g2 = new javax.swing.JRadioButton();
+        h2 = new javax.swing.JRadioButton();
+        i2 = new javax.swing.JRadioButton();
+        a3 = new javax.swing.JRadioButton();
+        b3 = new javax.swing.JRadioButton();
+        d3 = new javax.swing.JRadioButton();
+        c3 = new javax.swing.JRadioButton();
+        h3 = new javax.swing.JRadioButton();
+        e3 = new javax.swing.JRadioButton();
+        f3 = new javax.swing.JRadioButton();
+        g3 = new javax.swing.JRadioButton();
+        i3 = new javax.swing.JRadioButton();
+        j3 = new javax.swing.JRadioButton();
+        j4 = new javax.swing.JRadioButton();
+        a4 = new javax.swing.JRadioButton();
+        b4 = new javax.swing.JRadioButton();
+        d4 = new javax.swing.JRadioButton();
+        c4 = new javax.swing.JRadioButton();
+        e4 = new javax.swing.JRadioButton();
+        f4 = new javax.swing.JRadioButton();
+        g4 = new javax.swing.JRadioButton();
+        h4 = new javax.swing.JRadioButton();
+        i4 = new javax.swing.JRadioButton();
+        j5 = new javax.swing.JRadioButton();
+        a5 = new javax.swing.JRadioButton();
+        b5 = new javax.swing.JRadioButton();
+        d5 = new javax.swing.JRadioButton();
+        c5 = new javax.swing.JRadioButton();
+        e5 = new javax.swing.JRadioButton();
+        f5 = new javax.swing.JRadioButton();
+        g5 = new javax.swing.JRadioButton();
+        h5 = new javax.swing.JRadioButton();
+        i5 = new javax.swing.JRadioButton();
+        j6 = new javax.swing.JRadioButton();
+        a6 = new javax.swing.JRadioButton();
+        b6 = new javax.swing.JRadioButton();
+        d6 = new javax.swing.JRadioButton();
+        c6 = new javax.swing.JRadioButton();
+        e6 = new javax.swing.JRadioButton();
+        f6 = new javax.swing.JRadioButton();
+        g6 = new javax.swing.JRadioButton();
+        h6 = new javax.swing.JRadioButton();
+        i6 = new javax.swing.JRadioButton();
+        j7 = new javax.swing.JRadioButton();
+        a7 = new javax.swing.JRadioButton();
+        b7 = new javax.swing.JRadioButton();
+        d7 = new javax.swing.JRadioButton();
+        c7 = new javax.swing.JRadioButton();
+        e7 = new javax.swing.JRadioButton();
+        f7 = new javax.swing.JRadioButton();
+        g7 = new javax.swing.JRadioButton();
+        h7 = new javax.swing.JRadioButton();
+        i7 = new javax.swing.JRadioButton();
+        j8 = new javax.swing.JRadioButton();
+        a8 = new javax.swing.JRadioButton();
+        b8 = new javax.swing.JRadioButton();
+        d8 = new javax.swing.JRadioButton();
+        c8 = new javax.swing.JRadioButton();
+        e8 = new javax.swing.JRadioButton();
+        f8 = new javax.swing.JRadioButton();
+        g8 = new javax.swing.JRadioButton();
+        h8 = new javax.swing.JRadioButton();
+        i8 = new javax.swing.JRadioButton();
+        j9 = new javax.swing.JRadioButton();
+        a9 = new javax.swing.JRadioButton();
+        b9 = new javax.swing.JRadioButton();
+        d9 = new javax.swing.JRadioButton();
+        c9 = new javax.swing.JRadioButton();
+        e9 = new javax.swing.JRadioButton();
+        f9 = new javax.swing.JRadioButton();
+        g9 = new javax.swing.JRadioButton();
+        h9 = new javax.swing.JRadioButton();
+        i9 = new javax.swing.JRadioButton();
+        j10 = new javax.swing.JRadioButton();
+        a10 = new javax.swing.JRadioButton();
+        b10 = new javax.swing.JRadioButton();
+        d10 = new javax.swing.JRadioButton();
+        c10 = new javax.swing.JRadioButton();
+        e10 = new javax.swing.JRadioButton();
+        f10 = new javax.swing.JRadioButton();
+        g10 = new javax.swing.JRadioButton();
+        h10 = new javax.swing.JRadioButton();
+        i10 = new javax.swing.JRadioButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -47,79 +161,247 @@ public class Client extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        playerPanel = new javax.swing.JPanel();
+        playerLabel = new javax.swing.JLabel();
+        startPanel = new javax.swing.JPanel();
+        nameLabel = new javax.swing.JLabel();
+        nameInput = new javax.swing.JTextField();
+        readyButton = new javax.swing.JButton();
+        outputPanel = new javax.swing.JPanel();
+        targetLabel = new javax.swing.JLabel();
+        fireButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        systemOutput = new javax.swing.JTextArea();
+        jLabel21 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Battleship");
         setName("window"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(825, 1000));
+        setPreferredSize(new java.awt.Dimension(656, 592));
+        setResizable(false);
 
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.setPreferredSize(new java.awt.Dimension(500, 500));
+        opponentPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        opponentPanel.setName("opponentPanel"); // NOI18N
+        opponentPanel.setPreferredSize(new java.awt.Dimension(500, 500));
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Opponent");
+        opponentLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        opponentLabel.setText("Opponent");
 
-        jLabel3.setText("A");
+        radioPanel.setName("grid"); // NOI18N
+        radioPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setText("B");
+        a1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                a1MouseClicked(evt);
+            }
+        });
+        radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
+        radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
+        radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
+        radioPanel.add(c1, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 9, -1, -1));
+        radioPanel.add(h1, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 9, -1, -1));
+        radioPanel.add(e1, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 9, -1, -1));
+        radioPanel.add(f1, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 9, -1, -1));
+        radioPanel.add(g1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 9, -1, -1));
+        radioPanel.add(i1, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 9, -1, -1));
+        radioPanel.add(j1, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 9, -1, -1));
+        radioPanel.add(j2, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 34, -1, -1));
+        radioPanel.add(a2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 34, -1, -1));
+        radioPanel.add(b2, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 34, -1, -1));
+        radioPanel.add(d2, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 34, -1, -1));
+        radioPanel.add(c2, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 34, -1, -1));
+        radioPanel.add(e2, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 34, -1, -1));
+        radioPanel.add(f2, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 34, -1, -1));
+        radioPanel.add(g2, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 34, -1, -1));
+        radioPanel.add(h2, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 34, -1, -1));
+        radioPanel.add(i2, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 34, -1, -1));
+        radioPanel.add(a3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 59, -1, -1));
+        radioPanel.add(b3, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 59, -1, -1));
+        radioPanel.add(d3, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 59, -1, -1));
+        radioPanel.add(c3, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 59, -1, -1));
+        radioPanel.add(h3, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 59, -1, -1));
+        radioPanel.add(e3, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 59, -1, -1));
+        radioPanel.add(f3, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 59, -1, -1));
+        radioPanel.add(g3, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 59, -1, -1));
+        radioPanel.add(i3, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 59, -1, -1));
+        radioPanel.add(j3, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 59, -1, -1));
+        radioPanel.add(j4, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 84, -1, -1));
+        radioPanel.add(a4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 84, -1, -1));
+        radioPanel.add(b4, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 84, -1, -1));
+        radioPanel.add(d4, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 84, -1, -1));
+        radioPanel.add(c4, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 84, -1, -1));
+        radioPanel.add(e4, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 84, -1, -1));
+        radioPanel.add(f4, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 84, -1, -1));
+        radioPanel.add(g4, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 84, -1, -1));
+        radioPanel.add(h4, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 84, -1, -1));
+        radioPanel.add(i4, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 84, -1, -1));
+        radioPanel.add(j5, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 109, -1, -1));
+        radioPanel.add(a5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 109, -1, -1));
+        radioPanel.add(b5, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 109, -1, -1));
+        radioPanel.add(d5, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 109, -1, -1));
+        radioPanel.add(c5, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 109, -1, -1));
+        radioPanel.add(e5, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 109, -1, -1));
+        radioPanel.add(f5, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 109, -1, -1));
+        radioPanel.add(g5, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 109, -1, -1));
+        radioPanel.add(h5, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 109, -1, -1));
+        radioPanel.add(i5, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 109, -1, -1));
+        radioPanel.add(j6, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 134, -1, -1));
+        radioPanel.add(a6, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 134, -1, -1));
+        radioPanel.add(b6, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 134, -1, -1));
+        radioPanel.add(d6, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 134, -1, -1));
+        radioPanel.add(c6, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 134, -1, -1));
+        radioPanel.add(e6, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 134, -1, -1));
+        radioPanel.add(f6, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 134, -1, -1));
+        radioPanel.add(g6, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 134, -1, -1));
+        radioPanel.add(h6, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 134, -1, -1));
+        radioPanel.add(i6, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 134, -1, -1));
+        radioPanel.add(j7, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 159, -1, -1));
+        radioPanel.add(a7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 159, -1, -1));
+        radioPanel.add(b7, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 159, -1, -1));
+        radioPanel.add(d7, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 159, -1, -1));
+        radioPanel.add(c7, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 159, -1, -1));
+        radioPanel.add(e7, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 159, -1, -1));
+        radioPanel.add(f7, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 159, -1, -1));
+        radioPanel.add(g7, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 159, -1, -1));
+        radioPanel.add(h7, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 159, -1, -1));
+        radioPanel.add(i7, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 159, -1, -1));
+        radioPanel.add(j8, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 184, -1, -1));
+        radioPanel.add(a8, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 184, -1, -1));
+        radioPanel.add(b8, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 184, -1, -1));
+        radioPanel.add(d8, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 184, -1, -1));
+        radioPanel.add(c8, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 184, -1, -1));
+        radioPanel.add(e8, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 184, -1, -1));
+        radioPanel.add(f8, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 184, -1, -1));
+        radioPanel.add(g8, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 184, -1, -1));
+        radioPanel.add(h8, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 184, -1, -1));
+        radioPanel.add(i8, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 184, -1, -1));
+        radioPanel.add(j9, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 209, -1, -1));
+        radioPanel.add(a9, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 209, -1, -1));
+        radioPanel.add(b9, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 209, -1, -1));
+        radioPanel.add(d9, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 209, -1, -1));
+        radioPanel.add(c9, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 209, -1, -1));
+        radioPanel.add(e9, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 209, -1, -1));
+        radioPanel.add(f9, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 209, -1, -1));
+        radioPanel.add(g9, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 209, -1, -1));
+        radioPanel.add(h9, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 209, -1, -1));
+        radioPanel.add(i9, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 209, -1, -1));
+        radioPanel.add(j10, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 234, -1, -1));
+        radioPanel.add(a10, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 234, -1, -1));
+        radioPanel.add(b10, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 234, -1, -1));
+        radioPanel.add(d10, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 234, -1, -1));
+        radioPanel.add(c10, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 234, -1, -1));
+        radioPanel.add(e10, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 234, -1, -1));
+        radioPanel.add(f10, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 234, -1, -1));
+        radioPanel.add(g10, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 234, -1, -1));
+        radioPanel.add(h10, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 234, -1, -1));
+        radioPanel.add(i10, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 234, -1, -1));
 
-        jLabel5.setText("C");
+        jLabel1.setText("A");
 
-        jLabel6.setText("D");
+        jLabel2.setText("B");
 
-        jLabel7.setText("E");
+        jLabel3.setText("C");
 
-        jLabel8.setText("F");
+        jLabel4.setText("D");
 
-        jLabel9.setText("G");
+        jLabel5.setText("E");
 
-        jLabel10.setText("H");
+        jLabel6.setText("F");
 
-        jLabel11.setText("I");
+        jLabel7.setText("G");
 
-        jLabel12.setText("J");
+        jLabel8.setText("H");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(212, Short.MAX_VALUE)
+        jLabel9.setText("I");
+
+        jLabel10.setText("J");
+
+        jLabel11.setText("1");
+
+        jLabel12.setText("2");
+
+        jLabel13.setText("3");
+
+        jLabel14.setText("4");
+
+        jLabel15.setText("5");
+
+        jLabel16.setText("6");
+
+        jLabel17.setText("7");
+
+        jLabel18.setText("8");
+
+        jLabel19.setText("9");
+
+        jLabel20.setText("10");
+
+        javax.swing.GroupLayout opponentPanelLayout = new javax.swing.GroupLayout(opponentPanel);
+        opponentPanel.setLayout(opponentPanelLayout);
+        opponentPanelLayout.setHorizontalGroup(
+            opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(opponentPanelLayout.createSequentialGroup()
+                .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(opponentPanelLayout.createSequentialGroup()
+                        .addGap(124, 124, 124)
+                        .addComponent(opponentLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, opponentPanelLayout.createSequentialGroup()
+                        .addContainerGap(15, Short.MAX_VALUE)
+                        .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(radioPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addGroup(opponentPanelLayout.createSequentialGroup()
+                .addGap(51, 51, 51)
                 .addComponent(jLabel1)
-                .addGap(227, 227, 227))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        opponentPanelLayout.setVerticalGroup(
+            opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(opponentPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(opponentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
@@ -127,51 +409,151 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12))
-                .addContainerGap(442, Short.MAX_VALUE))
+                    .addComponent(jLabel10))
+                .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(opponentPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(radioPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(opponentPanelLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel18)
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel20)))
+                .addContainerGap())
         );
 
-        jLabel1.getAccessibleContext().setAccessibleName("playerName");
+        opponentLabel.getAccessibleContext().setAccessibleName("playerName");
+        radioPanel.getAccessibleContext().setAccessibleName("grid");
 
-        jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel2.setPreferredSize(new java.awt.Dimension(500, 500));
+        playerPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        playerPanel.setName("opponentPanel"); // NOI18N
+        playerPanel.setPreferredSize(new java.awt.Dimension(500, 500));
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Local Player");
+        playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        playerLabel.setText("Player");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(206, 206, 206)
-                .addComponent(jLabel2)
-                .addContainerGap(220, Short.MAX_VALUE))
+        javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
+        playerPanel.setLayout(playerPanelLayout);
+        playerPanelLayout.setHorizontalGroup(
+            playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playerPanelLayout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(playerLabel)
+                .addContainerGap(134, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        playerPanelLayout.setVerticalGroup(
+            playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addContainerGap(465, Short.MAX_VALUE))
+                .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(319, Short.MAX_VALUE))
         );
 
-        jLabel2.getAccessibleContext().setAccessibleName("player");
+        startPanel.setName("gameStart"); // NOI18N
 
-        jPanel3.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel3.setPreferredSize(new java.awt.Dimension(300, 1000));
+        nameLabel.setText("Name:");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+        nameInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameInputActionPerformed(evt);
+            }
+        });
+
+        readyButton.setText("Ready");
+        readyButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                readyButtonMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout startPanelLayout = new javax.swing.GroupLayout(startPanel);
+        startPanel.setLayout(startPanelLayout);
+        startPanelLayout.setHorizontalGroup(
+            startPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(startPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(nameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nameInput))
+            .addGroup(startPanelLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(readyButton)
+                .addGap(0, 46, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        startPanelLayout.setVerticalGroup(
+            startPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(startPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(startPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameLabel)
+                    .addComponent(nameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(readyButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        outputPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        targetLabel.setText("Target:");
+
+        fireButton.setText("FIRE");
+        fireButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fireButtonMouseClicked(evt);
+            }
+        });
+
+        systemOutput.setColumns(20);
+        systemOutput.setRows(5);
+        jScrollPane2.setViewportView(systemOutput);
+
+        jLabel21.setText("-,-");
+
+        javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
+        outputPanel.setLayout(outputPanelLayout);
+        outputPanelLayout.setHorizontalGroup(
+            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(outputPanelLayout.createSequentialGroup()
+                        .addComponent(targetLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel21)
+                        .addGap(55, 55, 55)
+                        .addComponent(fireButton)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        outputPanelLayout.setVerticalGroup(
+            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fireButton)
+                    .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(targetLabel)
+                        .addComponent(jLabel21)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -179,12 +561,17 @@ public class Client extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(opponentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(playerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(startPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -192,18 +579,156 @@ public class Client extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
+                    .addComponent(playerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(opponentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(startPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
+        opponentPanel.getAccessibleContext().setAccessibleName("opponentPanel");
+        startPanel.getAccessibleContext().setAccessibleName("gameStart");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void nameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameInputActionPerformed
+
+    private void JRadioButtonMouseClicked(java.awt.event.MouseEvent evt) {
+        
+    }
+    
+    private void readyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readyButtonMouseClicked
+        try {
+            // TODO add your handling code here:
+            toServer.writeBoolean(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_readyButtonMouseClicked
+
+    private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
+        try {
+            // TODO add your handling code here:
+            toServer.writeObject(new Point(0, 0));
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_fireButtonMouseClicked
+
+    private void a1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_a1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_a1MouseClicked
+    
+    public void addButtons()
+    {
+        group.add(a1);
+        group.add(b1);
+        group.add(c1);
+        group.add(d1);
+        group.add(e1);
+        group.add(f1);
+        group.add(g1);
+        group.add(h1);
+        group.add(i1);
+        group.add(j1);
+        group.add(a2);
+        group.add(b2);
+        group.add(c2);
+        group.add(d2);
+        group.add(e2);
+        group.add(f2);
+        group.add(g2);
+        group.add(h2);
+        group.add(i2);
+        group.add(j2);
+        group.add(a3);
+        group.add(b3);
+        group.add(c3);
+        group.add(d3);
+        group.add(e3);
+        group.add(f3);
+        group.add(g3);
+        group.add(h3);
+        group.add(i3);
+        group.add(j3);
+        group.add(a4);
+        group.add(b4);
+        group.add(c4);
+        group.add(d4);
+        group.add(e4);
+        group.add(f4);
+        group.add(g4);
+        group.add(h4);
+        group.add(i4);
+        group.add(j4);
+        group.add(a5);
+        group.add(b5);
+        group.add(c5);
+        group.add(d5);
+        group.add(e5);
+        group.add(f5);
+        group.add(g5);
+        group.add(h5);
+        group.add(i5);
+        group.add(j5);
+        group.add(a6);
+        group.add(b6);
+        group.add(c6);
+        group.add(d6);
+        group.add(e6);
+        group.add(f6);
+        group.add(g6);
+        group.add(h6);
+        group.add(i6);
+        group.add(j6);
+        group.add(a7);
+        group.add(b7);
+        group.add(c7);
+        group.add(d7);
+        group.add(e7);
+        group.add(f7);
+        group.add(g7);
+        group.add(h7);
+        group.add(i7);
+        group.add(j7);
+        group.add(a8);
+        group.add(b8);
+        group.add(c8);
+        group.add(d8);
+        group.add(e8);
+        group.add(f8);
+        group.add(g8);
+        group.add(h8);
+        group.add(i8);
+        group.add(j8);
+        group.add(a9);
+        group.add(b9);
+        group.add(c9);
+        group.add(d9);
+        group.add(e9);
+        group.add(f9);
+        group.add(g9);
+        group.add(h9);
+        group.add(i9);
+        group.add(j9);
+        group.add(a10);
+        group.add(b10);
+        group.add(c10);
+        group.add(d10);
+        group.add(e10);
+        group.add(f10);
+        group.add(g10);
+        group.add(h10);
+        group.add(i10);
+        group.add(j10);
+    }
     /**
      * @param args the command line arguments
      */
@@ -212,11 +737,121 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton a1;
+    private javax.swing.JRadioButton a10;
+    private javax.swing.JRadioButton a2;
+    private javax.swing.JRadioButton a3;
+    private javax.swing.JRadioButton a4;
+    private javax.swing.JRadioButton a5;
+    private javax.swing.JRadioButton a6;
+    private javax.swing.JRadioButton a7;
+    private javax.swing.JRadioButton a8;
+    private javax.swing.JRadioButton a9;
+    private javax.swing.JRadioButton b1;
+    private javax.swing.JRadioButton b10;
+    private javax.swing.JRadioButton b2;
+    private javax.swing.JRadioButton b3;
+    private javax.swing.JRadioButton b4;
+    private javax.swing.JRadioButton b5;
+    private javax.swing.JRadioButton b6;
+    private javax.swing.JRadioButton b7;
+    private javax.swing.JRadioButton b8;
+    private javax.swing.JRadioButton b9;
+    private javax.swing.JRadioButton c1;
+    private javax.swing.JRadioButton c10;
+    private javax.swing.JRadioButton c2;
+    private javax.swing.JRadioButton c3;
+    private javax.swing.JRadioButton c4;
+    private javax.swing.JRadioButton c5;
+    private javax.swing.JRadioButton c6;
+    private javax.swing.JRadioButton c7;
+    private javax.swing.JRadioButton c8;
+    private javax.swing.JRadioButton c9;
+    private javax.swing.JRadioButton d1;
+    private javax.swing.JRadioButton d10;
+    private javax.swing.JRadioButton d2;
+    private javax.swing.JRadioButton d3;
+    private javax.swing.JRadioButton d4;
+    private javax.swing.JRadioButton d5;
+    private javax.swing.JRadioButton d6;
+    private javax.swing.JRadioButton d7;
+    private javax.swing.JRadioButton d8;
+    private javax.swing.JRadioButton d9;
+    private javax.swing.JRadioButton e1;
+    private javax.swing.JRadioButton e10;
+    private javax.swing.JRadioButton e2;
+    private javax.swing.JRadioButton e3;
+    private javax.swing.JRadioButton e4;
+    private javax.swing.JRadioButton e5;
+    private javax.swing.JRadioButton e6;
+    private javax.swing.JRadioButton e7;
+    private javax.swing.JRadioButton e8;
+    private javax.swing.JRadioButton e9;
+    private javax.swing.JRadioButton f1;
+    private javax.swing.JRadioButton f10;
+    private javax.swing.JRadioButton f2;
+    private javax.swing.JRadioButton f3;
+    private javax.swing.JRadioButton f4;
+    private javax.swing.JRadioButton f5;
+    private javax.swing.JRadioButton f6;
+    private javax.swing.JRadioButton f7;
+    private javax.swing.JRadioButton f8;
+    private javax.swing.JRadioButton f9;
+    private javax.swing.JButton fireButton;
+    private javax.swing.JRadioButton g1;
+    private javax.swing.JRadioButton g10;
+    private javax.swing.JRadioButton g2;
+    private javax.swing.JRadioButton g3;
+    private javax.swing.JRadioButton g4;
+    private javax.swing.JRadioButton g5;
+    private javax.swing.JRadioButton g6;
+    private javax.swing.JRadioButton g7;
+    private javax.swing.JRadioButton g8;
+    private javax.swing.JRadioButton g9;
+    private javax.swing.JRadioButton h1;
+    private javax.swing.JRadioButton h10;
+    private javax.swing.JRadioButton h2;
+    private javax.swing.JRadioButton h3;
+    private javax.swing.JRadioButton h4;
+    private javax.swing.JRadioButton h5;
+    private javax.swing.JRadioButton h6;
+    private javax.swing.JRadioButton h7;
+    private javax.swing.JRadioButton h8;
+    private javax.swing.JRadioButton h9;
+    private javax.swing.JRadioButton i1;
+    private javax.swing.JRadioButton i10;
+    private javax.swing.JRadioButton i2;
+    private javax.swing.JRadioButton i3;
+    private javax.swing.JRadioButton i4;
+    private javax.swing.JRadioButton i5;
+    private javax.swing.JRadioButton i6;
+    private javax.swing.JRadioButton i7;
+    private javax.swing.JRadioButton i8;
+    private javax.swing.JRadioButton i9;
+    private javax.swing.JRadioButton j1;
+    private javax.swing.JRadioButton j10;
+    private javax.swing.JRadioButton j2;
+    private javax.swing.JRadioButton j3;
+    private javax.swing.JRadioButton j4;
+    private javax.swing.JRadioButton j5;
+    private javax.swing.JRadioButton j6;
+    private javax.swing.JRadioButton j7;
+    private javax.swing.JRadioButton j8;
+    private javax.swing.JRadioButton j9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -224,8 +859,18 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField nameInput;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JLabel opponentLabel;
+    private javax.swing.JPanel opponentPanel;
+    private javax.swing.JPanel outputPanel;
+    private javax.swing.JLabel playerLabel;
+    private javax.swing.JPanel playerPanel;
+    private javax.swing.JPanel radioPanel;
+    private javax.swing.JButton readyButton;
+    private javax.swing.JPanel startPanel;
+    private javax.swing.JTextArea systemOutput;
+    private javax.swing.JLabel targetLabel;
     // End of variables declaration//GEN-END:variables
 }
