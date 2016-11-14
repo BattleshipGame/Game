@@ -1,6 +1,9 @@
 package Game;
 
-//Represents a ship on the game board
+/**
+ * Represents a ship on the game board
+ * @author Maurice Ajluni
+ */
 public class Ship
 {
     int size;
@@ -18,7 +21,7 @@ public class Ship
         switch(size)
         {
             case 2:
-                name = "";
+                name = "Patrol Boat";
                 break;
             case 3:
                 name = "Submarine";

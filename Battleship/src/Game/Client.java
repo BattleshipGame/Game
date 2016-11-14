@@ -7,6 +7,10 @@ import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
+/**
+ * Runs the Client for the Battleship game
+ * @author Maurice Ajluni
+ */
 public class Client extends javax.swing.JFrame {
 
     private int[][] playerBoard = new int[10][10];
@@ -24,6 +28,7 @@ public class Client extends javax.swing.JFrame {
     public Client() {
         initComponents();
         addButtons();
+        placeShips();
         
         try
         {
@@ -180,12 +185,11 @@ public class Client extends javax.swing.JFrame {
         fireButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         systemOutput = new javax.swing.JTextArea();
-        jLabel21 = new javax.swing.JLabel();
+        targetLocation = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Battleship");
         setName("window"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(656, 592));
         setResizable(false);
 
         opponentPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -196,6 +200,11 @@ public class Client extends javax.swing.JFrame {
         opponentLabel.setText("Opponent");
 
         radioPanel.setName("grid"); // NOI18N
+        radioPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                radioPanelMouseClicked(evt);
+            }
+        });
         radioPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         a1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -204,6 +213,12 @@ public class Client extends javax.swing.JFrame {
             }
         });
         radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
+
+        b1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                b1MouseClicked(evt);
+            }
+        });
         radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
         radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
         radioPanel.add(c1, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 9, -1, -1));
@@ -523,7 +538,7 @@ public class Client extends javax.swing.JFrame {
         systemOutput.setRows(5);
         jScrollPane2.setViewportView(systemOutput);
 
-        jLabel21.setText("-,-");
+        targetLocation.setText("-,-");
 
         javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
         outputPanel.setLayout(outputPanelLayout);
@@ -536,7 +551,7 @@ public class Client extends javax.swing.JFrame {
                     .addGroup(outputPanelLayout.createSequentialGroup()
                         .addComponent(targetLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel21)
+                        .addComponent(targetLocation)
                         .addGap(55, 55, 55)
                         .addComponent(fireButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -550,7 +565,7 @@ public class Client extends javax.swing.JFrame {
                     .addComponent(fireButton)
                     .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(targetLabel)
-                        .addComponent(jLabel21)))
+                        .addComponent(targetLocation)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                 .addContainerGap())
@@ -596,18 +611,15 @@ public class Client extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Assigns this players name to the input
     private void nameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameInputActionPerformed
-        // TODO add your handling code here:
+        playerName = nameInput.getText();
     }//GEN-LAST:event_nameInputActionPerformed
 
-    private void JRadioButtonMouseClicked(java.awt.event.MouseEvent evt) {
-        
-    }
-    
+    //Tells the server this players name and ready status
     private void readyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readyButtonMouseClicked
         try {
-            // TODO add your handling code here:
-            toServer.writeBoolean(true);
+            toServer.writeObject(new Point(2,2));
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -615,17 +627,27 @@ public class Client extends javax.swing.JFrame {
 
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
         try {
-            // TODO add your handling code here:
-            toServer.writeObject(new Point(0, 0));
+            toServer.writeObject(target);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
     private void a1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_a1MouseClicked
-        // TODO add your handling code here:
+        targetLocation.setText("A, 1");
+        target = new Point(0, 0);
     }//GEN-LAST:event_a1MouseClicked
+
+    private void b1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b1MouseClicked
+        targetLocation.setText("B, 1");
+        target = new Point(0, 1);
+    }//GEN-LAST:event_b1MouseClicked
+
+    private void radioPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_radioPanelMouseClicked
+        
+    }//GEN-LAST:event_radioPanelMouseClicked
     
+    //Adds radio buttons to Button Group so only one can be chosen
     public void addButtons()
     {
         group.add(a1);
@@ -729,6 +751,12 @@ public class Client extends javax.swing.JFrame {
         group.add(i10);
         group.add(j10);
     }
+    
+    public void placeShips()
+    {
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -851,7 +879,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -872,5 +899,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JPanel startPanel;
     private javax.swing.JTextArea systemOutput;
     private javax.swing.JLabel targetLabel;
+    private javax.swing.JLabel targetLocation;
     // End of variables declaration//GEN-END:variables
 }

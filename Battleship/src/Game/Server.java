@@ -6,8 +6,14 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
+/**
+ * Runs the server for the Battleship game
+ * @author Maurice Ajluni
+ */
 public class Server extends JFrame implements BattleshipData {
 //using enum interface for now    
     // public final int VACANT = 0;
@@ -16,10 +22,6 @@ public class Server extends JFrame implements BattleshipData {
 
     // Text area for displaying contents
     private JTextArea jta = new JTextArea();
-
-    private int[][] player1Board, player2Board;
-    private ObjectOutputStream toClient;
-    private ObjectInputStream fromClient;
 
     public static void main(String[] args) {
         new Server();
@@ -56,7 +58,7 @@ public class Server extends JFrame implements BattleshipData {
                         + player1.getInetAddress().getHostAddress() + '\n');
 
                 // Notify that the player is Player 1
-                new DataOutputStream(
+                new ObjectOutputStream(
                         player1.getOutputStream()).writeInt(1);//was originally a constant defined as 1
                 // Connect to player 2
                 Socket player2 = serverSocket.accept();
@@ -67,7 +69,7 @@ public class Server extends JFrame implements BattleshipData {
                         + player2.getInetAddress().getHostAddress() + '\n');
 
                 // Notify that the player is Player 2
-                new DataOutputStream(
+                new ObjectOutputStream(
                         player2.getOutputStream()).writeInt(2);//see comment above
 
                 // Display this session and increment session number
@@ -121,20 +123,27 @@ public class Server extends JFrame implements BattleshipData {
          * Run a thread
          */
         @Override
-        public void run() {
+        public void run()
+        {   
             try {
                 // Create data input and output streams
-                DataInputStream player1Input = new DataInputStream(player1.getInputStream());
-                DataOutputStream player1Output = new DataOutputStream(player1.getOutputStream());
+                ObjectInputStream player1Input = new ObjectInputStream(player1.getInputStream());
+                ObjectOutputStream player1Output = new ObjectOutputStream(player1.getOutputStream());
 
-                DataInputStream player2Input = new DataInputStream(player2.getInputStream());
-                DataOutputStream player2Output = new DataOutputStream(player2.getOutputStream());
+                ObjectInputStream player2Input = new ObjectInputStream(player2.getInputStream());
+                ObjectOutputStream player2Output = new ObjectOutputStream(player2.getOutputStream());
 
                 //runs 5 turns of placing ships 
                 for (int ii = 0; ii < SHIP_COUNT; ii++) {
                     //at current stage, adds a ship along a line using a coordinate, orientation, and 
                     //ship size
-                    Point point = new Point(player1Input.readInt(), player1Input.readInt());
+                    Point point = null;
+                    try {
+                        point = (Point) player1Input.readObject();
+                        System.out.println(point.toString());
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     int orientation = player1Input.readInt();
                     int shipSize = player1Input.readInt();
                     Point[] pointArray = new Point[shipSize];//stores the points to create a ship
@@ -153,7 +162,7 @@ public class Server extends JFrame implements BattleshipData {
 
                 //lets players take turns firing at each other; broken when a player wins
                 while (true) {
-
+                    
                 }
 
             } catch (IOException e) {
