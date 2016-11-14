@@ -604,7 +604,6 @@ public class Client extends javax.swing.JFrame {
         
     }
     
-    
     private void readyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readyButtonMouseClicked
         try {
             // TODO add your handling code here:
