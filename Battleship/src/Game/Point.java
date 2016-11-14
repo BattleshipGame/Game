@@ -19,4 +19,10 @@ public class Point
     {
         return y;
     }
+    //returns the point as an ordered pair
+    @Override
+    public String toString()
+    {
+        return ("(" + x + "," + y + ")");
+    }
 }
