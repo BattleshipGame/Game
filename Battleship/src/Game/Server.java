@@ -50,34 +50,15 @@ public class Server extends JFrame implements BattleshipData {
                         + ": Wait for players to join session " + clientNo + '\n');
 
                 // Connect to player 1
-                Socket player1 = serverSocket.accept();
+                Socket player = serverSocket.accept();
 
-                jta.append(new Date() + ": Player 1 joined session "
-                        + clientNo + '\n');
-                jta.append("Player 1's IP address"
-                        + player1.getInetAddress().getHostAddress() + '\n');
-
-                // Notify that the player is Player 1
-                new ObjectOutputStream(
-                        player1.getOutputStream()).writeInt(1);//was originally a constant defined as 1
-                // Connect to player 2
-                Socket player2 = serverSocket.accept();
-
-                jta.append(new Date()
-                        + ": Player 2 joined session " + clientNo + '\n');
-                jta.append("Player 2's IP address"
-                        + player2.getInetAddress().getHostAddress() + '\n');
-
-                // Notify that the player is Player 2
-                new ObjectOutputStream(
-                        player2.getOutputStream()).writeInt(2);//see comment above
-
+                jta.append(new Date() + ": Player " + clientNo + " joined session " + clientNo + '\n');
+                jta.append("Player " + clientNo + "'s IP address" + player.getInetAddress().getHostAddress() + '\n');
                 // Display this session and increment session number
-                jta.append(new Date() + ": Start a thread for session "
-                        + clientNo++ + '\n');
+                jta.append(new Date() + ": Start a thread for session " + clientNo++ + '\n');
 
                 // Create a new thread for this session of two players
-                HandleAClient task = new HandleAClient(player1, player2);
+                HandleAClient task = new HandleAClient(player, clientNo);
 
                 // Start the new thread
                 new Thread(task).start();
@@ -91,30 +72,27 @@ public class Server extends JFrame implements BattleshipData {
     // Define the thread class for handling new connection
     class HandleAClient implements Runnable {
 
-        private Socket player1; // A connected socket
-        private Socket player2;
+        private Socket player;
+        private String playerName;
 
         //creates grids that store the status of each tile on both game boards
-        private tile[][] player1Board, player2Board;
-        private Ship[] player1Ships, player2Ships;
+        private tile[][] playerBoard;
+        private Ship[] playerShips;
 
         /**
          * Construct a thread
          */
-        public HandleAClient(Socket p1, Socket p2) {
-            this.player1 = p1;
-            this.player2 = p2;
-            player1Board = new tile[SIDE_LENGTH][SIDE_LENGTH];
-            player2Board = new tile[SIDE_LENGTH][SIDE_LENGTH];
-            player1Ships = new Ship[SHIP_COUNT];
-            player2Ships = new Ship[SHIP_COUNT];
+        public HandleAClient(Socket s, int count) {
+            this.player = s;
+            playerBoard = new tile[SIDE_LENGTH][SIDE_LENGTH];
+            playerShips = new Ship[SHIP_COUNT];
             
+            playerName = "Player " + count;
             
             //initialize boards with empty tiles
             for (int ii = 0; ii < SIDE_LENGTH; ii++) {
                 for (int jj = 0; jj < SIDE_LENGTH; jj++) {
-                    player1Board[ii][jj] = vacant;
-                    player1Board[ii][jj] = vacant;
+                    playerBoard[ii][jj] = vacant;
                 }
             }
         }
@@ -127,12 +105,13 @@ public class Server extends JFrame implements BattleshipData {
         {   
             try {
                 // Create data input and output streams
-                ObjectInputStream player1Input = new ObjectInputStream(player1.getInputStream());
-                ObjectOutputStream player1Output = new ObjectOutputStream(player1.getOutputStream());
+                ObjectInputStream playerInput = new ObjectInputStream(player.getInputStream());
+                ObjectOutputStream playerOutput = new ObjectOutputStream(player.getOutputStream());
 
-                ObjectInputStream player2Input = new ObjectInputStream(player2.getInputStream());
-                ObjectOutputStream player2Output = new ObjectOutputStream(player2.getOutputStream());
+                //ObjectInputStream player2Input = new ObjectInputStream(player2.getInputStream());
+                //ObjectOutputStream player2Output = new ObjectOutputStream(player2.getOutputStream());
 
+                /*
                 //runs 5 turns of placing ships 
                 for (int ii = 0; ii < SHIP_COUNT; ii++) {
                     //at current stage, adds a ship along a line using a coordinate, orientation, and 
@@ -159,10 +138,12 @@ public class Server extends JFrame implements BattleshipData {
                     player1Ships[ii] = new Ship(pointArray);
 
                 }
+                */
 
                 //lets players take turns firing at each other; broken when a player wins
-                while (true) {
-                    
+                while (true)
+                {
+                    //String playerName = 
                 }
 
             } catch (IOException e) {

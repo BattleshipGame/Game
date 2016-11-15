@@ -21,14 +21,15 @@ public class Client extends javax.swing.JFrame {
     private JRadioButton[][] opponetBoard = new JRadioButton[10][10];
     private ButtonGroup group = new ButtonGroup();
     private Point target;
+    private boolean ready = false;
     
     /**
      * Creates new form Client
      */
     public Client() {
         initComponents();
+        fireButton.setEnabled(false);
         addButtons();
-        placeShips();
         
         try
         {
@@ -200,25 +201,8 @@ public class Client extends javax.swing.JFrame {
         opponentLabel.setText("Opponent");
 
         radioPanel.setName("grid"); // NOI18N
-        radioPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                radioPanelMouseClicked(evt);
-            }
-        });
         radioPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        a1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                a1MouseClicked(evt);
-            }
-        });
         radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
-
-        b1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                b1MouseClicked(evt);
-            }
-        });
         radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
         radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
         radioPanel.add(c1, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 9, -1, -1));
@@ -614,12 +598,19 @@ public class Client extends javax.swing.JFrame {
     //Assigns this players name to the input
     private void nameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameInputActionPerformed
         playerName = nameInput.getText();
+        
+        try {
+            toServer.writeObject(playerName);
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_nameInputActionPerformed
 
     //Tells the server this players name and ready status
     private void readyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readyButtonMouseClicked
         try {
-            toServer.writeObject(new Point(2,2));
+            ready = true;
+            toServer.writeBoolean(true);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -632,20 +623,6 @@ public class Client extends javax.swing.JFrame {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_fireButtonMouseClicked
-
-    private void a1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_a1MouseClicked
-        targetLocation.setText("A, 1");
-        target = new Point(0, 0);
-    }//GEN-LAST:event_a1MouseClicked
-
-    private void b1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b1MouseClicked
-        targetLocation.setText("B, 1");
-        target = new Point(0, 1);
-    }//GEN-LAST:event_b1MouseClicked
-
-    private void radioPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_radioPanelMouseClicked
-        
-    }//GEN-LAST:event_radioPanelMouseClicked
     
     //Adds radio buttons to Button Group so only one can be chosen
     public void addButtons()
@@ -750,11 +727,6 @@ public class Client extends javax.swing.JFrame {
         group.add(h10);
         group.add(i10);
         group.add(j10);
-    }
-    
-    public void placeShips()
-    {
-        
     }
     
     /**
