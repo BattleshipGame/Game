@@ -177,6 +177,8 @@ public class Client extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         playerPanel = new javax.swing.JPanel();
         playerLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         startPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         nameInput = new javax.swing.JTextField();
@@ -202,6 +204,10 @@ public class Client extends javax.swing.JFrame {
 
         radioPanel.setName("grid"); // NOI18N
         radioPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        a1.setHideActionText(true);
+        a1.setLabel("");
+        a1.setName("00"); // NOI18N
         radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
         radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
         radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
@@ -447,6 +453,37 @@ public class Client extends javax.swing.JFrame {
         playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playerLabel.setText("Player");
 
+        jScrollPane1.setColumnHeader(null);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", null, null, null, null, null, null, null, null, null, null},
+                {"2", null, null, null, null, null, null, null, null, null, null},
+                {"3", null, null, null, null, null, null, null, null, null, null},
+                {"4", null, null, null, null, null, null, null, null, null, null},
+                {"5", null, null, null, null, null, null, null, null, null, null},
+                {"6", null, null, null, null, null, null, null, null, null, null},
+                {"7", null, null, null, null, null, null, null, null, null, null},
+                {"8", null, null, null, null, null, null, null, null, null, null},
+                {"9", null, null, null, null, null, null, null, null, null, null},
+                {"10", null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setCellSelectionEnabled(true);
+        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
         playerPanel.setLayout(playerPanelLayout);
         playerPanelLayout.setHorizontalGroup(
@@ -455,13 +492,19 @@ public class Client extends javax.swing.JFrame {
                 .addGap(135, 135, 135)
                 .addComponent(playerLabel)
                 .addContainerGap(134, Short.MAX_VALUE))
+            .addGroup(playerPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
         playerPanelLayout.setVerticalGroup(
             playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(319, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         startPanel.setName("gameStart"); // NOI18N
@@ -623,7 +666,7 @@ public class Client extends javax.swing.JFrame {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_fireButtonMouseClicked
-    
+
     //Adds radio buttons to Button Group so only one can be chosen
     public void addButtons()
     {
@@ -858,7 +901,9 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField nameInput;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel opponentLabel;
