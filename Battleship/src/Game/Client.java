@@ -41,6 +41,8 @@ public class Client extends javax.swing.JFrame {
         {
             System.err.println(ex.toString() + '\n');
         }
+        
+        placeShips();
     }
 
     /**
@@ -206,8 +208,12 @@ public class Client extends javax.swing.JFrame {
         radioPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         a1.setHideActionText(true);
-        a1.setLabel("");
         a1.setName("00"); // NOI18N
+        a1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                a1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
         radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
         radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
@@ -453,8 +459,6 @@ public class Client extends javax.swing.JFrame {
         playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playerLabel.setText("Player");
 
-        jScrollPane1.setColumnHeader(null);
-
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", null, null, null, null, null, null, null, null, null, null},
@@ -661,12 +665,37 @@ public class Client extends javax.swing.JFrame {
 
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
         try {
+            fireButton.setEnabled(false);
             toServer.writeObject(target);
+            toServer.flush();
+            
+            int shot = fromServer.readInt();
+            switch(shot)
+            {
+                case 0:
+                    systemOutput.append("\nMiss at " + target + "\nNext player's turn.");
+                case 1:
+                    systemOutput.append("\nHit at " + target + "\nNext player's turn.");
+            }
+                
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
+    private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
+        target = new Point(a1.getName().charAt(0), a1.getName().charAt(1));
+        targetLocation.setText("A, 1");
+    }//GEN-LAST:event_a1ActionPerformed
+
+    public void placeShips()
+    {
+        for(int i = 0; i < shipList.length; i++)
+        {
+            
+        }
+    }
+    
     //Adds radio buttons to Button Group so only one can be chosen
     public void addButtons()
     {

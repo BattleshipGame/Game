@@ -6,8 +6,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.awt.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -105,8 +103,8 @@ public class Server extends JFrame implements BattleshipData {
         {   
             try {
                 // Create data input and output streams
-                ObjectInputStream playerInput = new ObjectInputStream(player.getInputStream());
-                ObjectOutputStream playerOutput = new ObjectOutputStream(player.getOutputStream());
+                ObjectInputStream fromClient = new ObjectInputStream(player.getInputStream());
+                ObjectOutputStream toClient = new ObjectOutputStream(player.getOutputStream());
 
                 //ObjectInputStream player2Input = new ObjectInputStream(player2.getInputStream());
                 //ObjectOutputStream player2Output = new ObjectOutputStream(player2.getOutputStream());
@@ -143,7 +141,7 @@ public class Server extends JFrame implements BattleshipData {
                 //lets players take turns firing at each other; broken when a player wins
                 while (true)
                 {
-                    //String playerName = 
+                    
                 }
 
             } catch (IOException e) {
