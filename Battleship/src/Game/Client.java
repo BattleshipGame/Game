@@ -11,17 +11,19 @@ import javax.swing.JRadioButton;
  * Runs the Client for the Battleship game
  * @author Maurice Ajluni
  */
-public class Client extends javax.swing.JFrame {
+public class Client extends javax.swing.JFrame implements BattleshipData {
 
     private int[][] playerBoard = new int[10][10];
     private ObjectOutputStream toServer;
     private ObjectInputStream fromServer;
     private String playerName;
     private Ship[] shipList = new Ship[5];
-    private JRadioButton[][] opponetBoard = new JRadioButton[10][10];
+    private JRadioButton[][] opponentBoard = new JRadioButton[10][10];
     private ButtonGroup group = new ButtonGroup();
     private Point target;
     private boolean ready = false;
+    private int orientation = VERTICAL;
+    private int selectedX, selectedY;
     
     /**
      * Creates new form Client
@@ -36,13 +38,15 @@ public class Client extends javax.swing.JFrame {
             Socket socket = new Socket("localhost", 8000);
             fromServer = new ObjectInputStream(socket.getInputStream());
             toServer = new ObjectOutputStream(socket.getOutputStream());
+            
+            placeShips();
         }
         catch(IOException ex)
         {
             System.err.println(ex.toString() + '\n');
         }
         
-        placeShips();
+        
     }
 
     /**
@@ -181,6 +185,7 @@ public class Client extends javax.swing.JFrame {
         playerLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        verticalCheckBox = new javax.swing.JCheckBox();
         startPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         nameInput = new javax.swing.JTextField();
@@ -366,7 +371,7 @@ public class Client extends javax.swing.JFrame {
                         .addComponent(opponentLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, opponentPanelLayout.createSequentialGroup()
-                        .addContainerGap(15, Short.MAX_VALUE)
+                        .addContainerGap(24, Short.MAX_VALUE)
                         .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -409,7 +414,7 @@ public class Client extends javax.swing.JFrame {
             .addGroup(opponentPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(opponentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -488,6 +493,14 @@ public class Client extends javax.swing.JFrame {
         jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jTable1);
 
+        verticalCheckBox.setSelected(true);
+        verticalCheckBox.setText("Vertical");
+        verticalCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verticalCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
         playerPanel.setLayout(playerPanelLayout);
         playerPanelLayout.setHorizontalGroup(
@@ -495,10 +508,14 @@ public class Client extends javax.swing.JFrame {
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addGap(135, 135, 135)
                 .addComponent(playerLabel)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(playerPanelLayout.createSequentialGroup()
+                        .addComponent(verticalCheckBox)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         playerPanelLayout.setVerticalGroup(
@@ -507,8 +524,10 @@ public class Client extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(verticalCheckBox)
+                .addGap(94, 94, 94))
         );
 
         startPanel.setName("gameStart"); // NOI18N
@@ -688,11 +707,33 @@ public class Client extends javax.swing.JFrame {
         targetLocation.setText("A, 1");
     }//GEN-LAST:event_a1ActionPerformed
 
-    public void placeShips()
+    private void verticalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verticalCheckBoxActionPerformed
+        // TODO add your handling code here:
+        if(orientation == VERTICAL)//switches between vertical and horizontal ship placement
+        {
+            orientation = HORIZONTAL;
+        }
+        else
+        {
+            orientation = VERTICAL;
+        }
+    }//GEN-LAST:event_verticalCheckBoxActionPerformed
+
+    public void placeShips() throws IOException
     {
+        int coordX = 0;
+        int coordY = 0;
+        int length = 0;
+        
         for(int i = 0; i < shipList.length; i++)
         {
+
             
+            //sends details of verified placement to server 
+            toServer.writeInt(coordX);
+            toServer.writeInt(coordY);
+            toServer.writeInt(orientation);
+            toServer.writeInt(length);
         }
     }
     
@@ -946,5 +987,6 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JTextArea systemOutput;
     private javax.swing.JLabel targetLabel;
     private javax.swing.JLabel targetLocation;
+    private javax.swing.JCheckBox verticalCheckBox;
     // End of variables declaration//GEN-END:variables
 }
