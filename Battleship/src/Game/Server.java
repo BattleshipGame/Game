@@ -1,7 +1,6 @@
 package Game;
 
-import static Game.BattleshipData.SHIP_COUNT;
-import static Game.BattleshipData.tile.*;
+import  Game.BattleshipData.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -10,7 +9,7 @@ import javax.swing.*;
 
 public class Server extends JFrame implements BattleshipData {
 //using enum interface for now    
-    // public final int VACANT = 0;
+    // public final int EMPTY = 0;
     // public final int OCCUPIED = 1;
     //public final int DESTROYED = 2;
 
@@ -92,7 +91,7 @@ public class Server extends JFrame implements BattleshipData {
         private Socket player2;
 
         //creates grids that store the status of each tile on both game boards
-        private tile[][] player1Board, player2Board;
+        private int[][] player1Board, player2Board;
         private Ship[] player1Ships, player2Ships;
         
         /**
@@ -101,16 +100,16 @@ public class Server extends JFrame implements BattleshipData {
         public HandleAClient(Socket p1, Socket p2) {
             this.player1 = p1;
             this.player2 = p2;
-            player1Board = new tile[SIDE_LENGTH][SIDE_LENGTH];
-            player2Board = new tile[SIDE_LENGTH][SIDE_LENGTH];
+            player1Board = new int[SIDE_LENGTH][SIDE_LENGTH];
+            player2Board = new int[SIDE_LENGTH][SIDE_LENGTH];
             player1Ships = new Ship[SHIP_COUNT];
             player2Ships = new Ship[SHIP_COUNT];
 
             //initialize boards with empty tiles
             for (int ii = 0; ii < SIDE_LENGTH; ii++) {
                 for (int jj = 0; jj < SIDE_LENGTH; jj++) {
-                    player1Board[ii][jj] = vacant;
-                    player1Board[ii][jj] = vacant;
+                    player1Board[ii][jj] = EMPTY;
+                    player1Board[ii][jj] = EMPTY;
                 }
             }
         }
@@ -140,14 +139,14 @@ public class Server extends JFrame implements BattleshipData {
                     //orientation of 1 is horizontal, starting point is on left 
                     if (orientation == 1) {
                         for (int jj = 0; jj < shipSize; jj++) {
-                            player1Board[point.x + jj][point.y] = occupied; //makes each location
+                            player1Board[point.x + jj][point.y] = OCCUPIED; //makes each location
                             // along the line contain a ship tile
                             pointArray[jj] = new Point(point.x + jj, point.y);
                         }
                     } else //verttical orientation, starts at top and extends downward
                     {
                         for (int jj = 0; jj < shipSize; jj++) {
-                            player1Board[point.x][point.y - jj] = occupied;
+                            player1Board[point.x][point.y - jj] = OCCUPIED;
                             pointArray[jj] = new Point(point.x, point.y - jj);
                         }
                         player1Ships[ii] = new Ship(pointArray);
@@ -161,14 +160,14 @@ public class Server extends JFrame implements BattleshipData {
                     //orientation of 1 is horizontal, starting point is on left 
                     if (orientation == 1) {
                         for (int jj = 0; jj < shipSize; jj++) {
-                            player2Board[point.x + jj][point.y] = occupied; //makes each location
+                            player2Board[point.x + jj][point.y] = OCCUPIED; //makes each location
                             // along the line contain a ship tile
                             pointArray[jj] = new Point(point.x + jj, point.y);
                         }
                     } else //verttical orientation, starts at top and extends downward
                     {
                         for (int jj = 0; jj < shipSize; jj++) {
-                            player2Board[point.x][point.y - jj] = occupied;
+                            player2Board[point.x][point.y - jj] = OCCUPIED;
                             pointArray[jj] = new Point(point.x, point.y - jj);
                         }
                         player2Ships[ii] = new Ship(pointArray);
@@ -183,13 +182,13 @@ public class Server extends JFrame implements BattleshipData {
                     int x = player1Input.readInt();//receives the coordinates of player 1's attack
                     int y = player1Input.readInt();
 
-                    if (player2Board[x][y] == occupied)//assumes the player is not targeting an already
+                    if (player2Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
                     //attacked tile
                     {
-                        player2Board[x][y] = destroyed;
+                        player2Board[x][y] = DESTROYED;
                         player1Output.writeInt(1);//sends confirmation of hit
                     } else {
-                        player2Board[x][y] = miss;
+                        player2Board[x][y] = MISS;
                         player1Output.writeInt(0);//sends confirmation of miss
                     }
 
@@ -213,13 +212,13 @@ public class Server extends JFrame implements BattleshipData {
                     x = player2Input.readInt();//receives the coordinates of player 1's attack
                     y = player2Input.readInt();
 
-                    if (player1Board[x][y] == occupied)//assumes the player is not targeting an already
+                    if (player1Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
                     //attacked tile
                     {
-                        player1Board[x][y] = destroyed;
+                        player1Board[x][y] = DESTROYED;
                         player2Output.writeInt(1);
                     } else {
-                        player1Board[x][y] = miss;
+                        player1Board[x][y] = MISS;
                         player2Output.writeInt(0);
                     }
                     
