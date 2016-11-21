@@ -1,6 +1,5 @@
 package Game;
 
-import  Game.BattleshipData.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -106,12 +105,14 @@ public class Server extends JFrame implements BattleshipData {
             player2Ships = new Ship[SHIP_COUNT];
 
             //initialize boards with empty tiles
+            /*redundant as arrays have value 0/EMPTY by default
             for (int ii = 0; ii < SIDE_LENGTH; ii++) {
                 for (int jj = 0; jj < SIDE_LENGTH; jj++) {
                     player1Board[ii][jj] = EMPTY;
                     player1Board[ii][jj] = EMPTY;
                 }
             }
+            */
         }
 
         /**
@@ -136,14 +137,15 @@ public class Server extends JFrame implements BattleshipData {
                     int shipSize = player1Input.readInt();
                     Point[] pointArray = new Point[shipSize];//stores the points to create a ship
 
-                    //orientation of 1 is horizontal, starting point is on left 
-                    if (orientation == 1) {
+                    //if orientation is horizontal, starting point is on left 
+                    if (orientation == HORIZONTAL) {
                         for (int jj = 0; jj < shipSize; jj++) {
                             player1Board[point.x + jj][point.y] = OCCUPIED; //makes each location
                             // along the line contain a ship tile
                             pointArray[jj] = new Point(point.x + jj, point.y);
                         }
-                    } else //verttical orientation, starts at top and extends downward
+                    } 
+                    else //verttical orientation, starts at top and extends downward
                     {
                         for (int jj = 0; jj < shipSize; jj++) {
                             player1Board[point.x][point.y - jj] = OCCUPIED;
@@ -158,7 +160,7 @@ public class Server extends JFrame implements BattleshipData {
                     pointArray = new Point[shipSize];//stores the points to create a ship
 
                     //orientation of 1 is horizontal, starting point is on left 
-                    if (orientation == 1) {
+                    if (orientation == HORIZONTAL) {
                         for (int jj = 0; jj < shipSize; jj++) {
                             player2Board[point.x + jj][point.y] = OCCUPIED; //makes each location
                             // along the line contain a ship tile
@@ -241,7 +243,7 @@ public class Server extends JFrame implements BattleshipData {
                 }
 
             } catch (IOException e) {
-                System.err.println(e);
+                System.err.println("client-server connection failed");
             }
         }
         

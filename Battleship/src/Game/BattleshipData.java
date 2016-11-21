@@ -6,8 +6,8 @@ package Game;
  */
 public interface BattleshipData 
 {
-public static final int SIDE_LENGTH = 10;
-public static final int SHIP_COUNT = 5;
+public  final int SIDE_LENGTH = 10;
+public  final int SHIP_COUNT = 5;
 
 //uses int constants for board state to avoid converting between enums and int arrays
 public final int EMPTY = 0;

@@ -9,6 +9,7 @@ import javax.swing.JRadioButton;
 
 /**
  * Runs the Client for the Battleship game
+ *
  * @author Maurice Ajluni
  */
 public class Client extends javax.swing.JFrame implements BattleshipData {
@@ -24,7 +25,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     private boolean ready = false;
     private int orientation = VERTICAL;
     private int selectedX, selectedY;
-    
+
     /**
      * Creates new form Client
      */
@@ -32,21 +33,17 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
         initComponents();
         fireButton.setEnabled(false);
         addButtons();
-        
-        try
-        {
+
+        try {
             Socket socket = new Socket("localhost", 8000);
             fromServer = new ObjectInputStream(socket.getInputStream());
             toServer = new ObjectOutputStream(socket.getOutputStream());
-            
+
             placeShips();
-        }
-        catch(IOException ex)
-        {
+        } catch (IOException ex) {
             System.err.println(ex.toString() + '\n');
         }
-        
-        
+
     }
 
     /**
@@ -664,7 +661,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     //Assigns this players name to the input
     private void nameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameInputActionPerformed
         playerName = nameInput.getText();
-        
+
         try {
             toServer.writeObject(playerName);
         } catch (IOException ex) {
@@ -687,16 +684,15 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             fireButton.setEnabled(false);
             toServer.writeObject(target);
             toServer.flush();
-            
+
             int shot = fromServer.readInt();
-            switch(shot)
-            {
+            switch (shot) {
                 case 0:
                     systemOutput.append("\nMiss at " + target + "\nNext player's turn.");
                 case 1:
                     systemOutput.append("\nHit at " + target + "\nNext player's turn.");
             }
-                
+
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -709,26 +705,23 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
 
     private void verticalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verticalCheckBoxActionPerformed
         // TODO add your handling code here:
-        if(orientation == VERTICAL)//switches between vertical and horizontal ship placement
+        if (orientation == VERTICAL)//switches between vertical and horizontal ship placement
         {
             orientation = HORIZONTAL;
-        }
-        else
-        {
+        } else {
             orientation = VERTICAL;
         }
     }//GEN-LAST:event_verticalCheckBoxActionPerformed
 
-    public void placeShips() throws IOException
-    {
+    private void placeShips() throws IOException {
         int coordX = 0;
         int coordY = 0;
         int length = 0;
         
-        for(int i = 0; i < shipList.length; i++)
-        {
+        //TODO Somehow obtain coordinates and length from player's placement board 
 
-            
+        for (int i = 0; i < shipList.length; i++) {
+
             //sends details of verified placement to server 
             toServer.writeInt(coordX);
             toServer.writeInt(coordY);
@@ -736,10 +729,47 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             toServer.writeInt(length);
         }
     }
-    
+ 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param size
+     * @return The validity of the attempted placement. 1 is valid, 2 is failed due to collision with another ship,
+     * and 3 if the attempted placement will put the ship out of bounds.
+     */
+    private int verifyPlacement(int x, int y, int size) {
+        int result = 1;
+
+        try {
+            if (orientation == HORIZONTAL) 
+            {
+                for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
+                {
+                  if(playerBoard[x + jj][y] == OCCUPIED)
+                  {
+                      result = 2;
+                  }
+                }
+            }
+            else
+            {
+                 for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
+                {
+                  if(playerBoard[x][y + jj] == OCCUPIED)
+                  {
+                      result = 2;
+                  }
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            result = 3;
+        }
+        return result;
+    }
+
     //Adds radio buttons to Button Group so only one can be chosen
-    public void addButtons()
-    {
+    public void addButtons() {
         group.add(a1);
         group.add(b1);
         group.add(c1);
@@ -841,7 +871,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
         group.add(i10);
         group.add(j10);
     }
-    
+
     /**
      * @param args the command line arguments
      */
