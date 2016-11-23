@@ -18,11 +18,12 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     private DataOutputStream toServer;
     private DataInputStream fromServer;
     private String playerName;
-    private Ship[] shipList = new Ship[5];
+    private Ship[] shipList;
     private JRadioButton[][] opponentBoard = new JRadioButton[10][10];
     private ButtonGroup group = new ButtonGroup();
     private Point target;
     private boolean ready = false;
+    private boolean isPlacementPhase;
     private int orientation = VERTICAL;
     private int selectedX, selectedY;
 
@@ -31,6 +32,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
      */
     public Client() {
         playerBoard = new int[SIDE_LENGTH][SIDE_LENGTH];
+        shipList = new Ship[SHIP_COUNT];
         initComponents();
         fireButton.setEnabled(false);
         addButtons();
@@ -681,29 +683,33 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     }//GEN-LAST:event_readyButtonMouseClicked
 
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        try {
-            fireButton.setEnabled(false);
-           // toServer.write(target);
-            toServer.flush();
+        if (!isPlacementPhase) {
+            try {
+                fireButton.setEnabled(false);
+                // toServer.write(target);
+                toServer.writeInt(selectedX);
+                toServer.writeInt(selectedY);
+                toServer.flush();
 
-            int shot = fromServer.readInt();
-            switch (shot) {
-                case 0:
-                    systemOutput.append("\nMiss at " + target + "\nNext player's turn.");
-                case 1:
-                    systemOutput.append("\nHit at " + target + "\nNext player's turn.");
+                int shot = fromServer.readInt();
+                switch (shot) {
+                    case 0:
+                        systemOutput.append("\nMiss at " + target + "\nNext player's turn.");
+                    case 1:
+                        systemOutput.append("\nHit at " + target + "\nNext player's turn.");
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
     private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
-       // target = new Point(a1.getName().charAt(0), a1.getName().charAt(1)); switching to Data streams only,
-       //therefore using selected x and y      -Chris
-       selectedX = a1.getName().charAt(0);
-       selectedY = a1.getName().charAt(1);
+        // target = new Point(a1.getName().charAt(0), a1.getName().charAt(1)); switching to Data streams only,
+        //therefore using selected x and y      -Chris
+        selectedX = a1.getName().charAt(0);
+        selectedY = a1.getName().charAt(1);
         targetLocation.setText("A, 1");
     }//GEN-LAST:event_a1ActionPerformed
 
@@ -718,52 +724,82 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     }//GEN-LAST:event_verticalCheckBoxActionPerformed
 
     private void placeShips() throws IOException {
-        int coordX = 0;
-        int coordY = 0;
-        int length = 0;
         
-        //TODO Somehow obtain coordinates and length from player's placement board 
+        fromServer.read();//recieves signal to begin each placement
+        
+        int length = 0;
 
+        //TODO Somehow obtain coordinates and length from player's placement board 
         for (int i = 0; i < shipList.length; i++) {
 
+            switch(i)//determines which ship to place, currently going from smallest to largest
+            {
+                case 0: 
+                    length = 2;
+                    systemOutput.setText("Placing Patrol Boat: Size 2");
+                    break;
+                    
+                    case 1: 
+                    length = 3;
+                    systemOutput.setText("Placing Submarine #1: Size 3");
+                    break;
+                    
+                    case 2: 
+                    length = 3;
+                    systemOutput.setText("Placing Submarine #2: Size 3");
+                    break;
+                    
+                    case 3: 
+                    length = 4;
+                    systemOutput.setText("Placing Battleship: Size 4");
+                    break;
+                    
+                    case 4: 
+                    length = 5;
+                    systemOutput.setText("Placing Carrier: Size 5");
+                    break;                   
+            }
+            
+            
             //sends details of verified placement to server 
-            toServer.writeInt(coordX);
-            toServer.writeInt(coordY);
+            toServer.writeInt(selectedX);
+            toServer.writeInt(selectedY);
             toServer.writeInt(orientation);
             toServer.writeInt(length);
+            
+            if(i >= SHIP_COUNT)//signals end of placement phase after all ships are placed
+            {
+                isPlacementPhase = false;
+            }
         }
     }
- 
+
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param size
-     * @return The validity of the attempted placement. 1 is valid, 2 is failed due to collision with another ship,
-     * and 3 if the attempted placement will put the ship out of bounds.
+     * @return The validity of the attempted placement. 1 is valid, 2 is failed
+     * due to collision with another ship, and 3 if the attempted placement will
+     * put the ship out of bounds.
      */
     private int verifyPlacement(int x, int y, int size) {
         int result = 1;
 
         try {
-            if (orientation == HORIZONTAL) 
-            {
+            if (orientation == HORIZONTAL) {
                 for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
                 {
-                  if(playerBoard[x + jj][y] == OCCUPIED)
-                  {
-                      result = 2;
-                  }
+                    if (playerBoard[x + jj][y] == OCCUPIED) {
+                        result = 2;
+                    }
                 }
-            }
-            else
-            {
-                 for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
+            } else {
+                for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
                 {
-                  if(playerBoard[x][y + jj] == OCCUPIED)
-                  {
-                      result = 2;
-                  }
+                    if (playerBoard[x][y + jj] == OCCUPIED) {
+                        result = 2;
+                    }
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
