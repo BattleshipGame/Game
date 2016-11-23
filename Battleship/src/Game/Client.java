@@ -14,9 +14,9 @@ import javax.swing.JRadioButton;
  */
 public class Client extends javax.swing.JFrame implements BattleshipData {
 
-    private int[][] playerBoard = new int[10][10];
-    private ObjectOutputStream toServer;
-    private ObjectInputStream fromServer;
+    private int[][] playerBoard;
+    private DataOutputStream toServer;
+    private DataInputStream fromServer;
     private String playerName;
     private Ship[] shipList = new Ship[5];
     private JRadioButton[][] opponentBoard = new JRadioButton[10][10];
@@ -30,14 +30,15 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
      * Creates new form Client
      */
     public Client() {
+        playerBoard = new int[SIDE_LENGTH][SIDE_LENGTH];
         initComponents();
         fireButton.setEnabled(false);
         addButtons();
 
         try {
             Socket socket = new Socket("localhost", 8000);
-            fromServer = new ObjectInputStream(socket.getInputStream());
-            toServer = new ObjectOutputStream(socket.getOutputStream());
+            fromServer = new DataInputStream(socket.getInputStream());
+            toServer = new DataOutputStream(socket.getOutputStream());
 
             placeShips();
         } catch (IOException ex) {
@@ -663,7 +664,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
         playerName = nameInput.getText();
 
         try {
-            toServer.writeObject(playerName);
+            toServer.writeChars(playerName);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -682,7 +683,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
         try {
             fireButton.setEnabled(false);
-            toServer.writeObject(target);
+           // toServer.write(target);
             toServer.flush();
 
             int shot = fromServer.readInt();
@@ -699,7 +700,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     }//GEN-LAST:event_fireButtonMouseClicked
 
     private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
-        target = new Point(a1.getName().charAt(0), a1.getName().charAt(1));
+       // target = new Point(a1.getName().charAt(0), a1.getName().charAt(1)); switching to Data streams only,
+       //therefore using selected x and y      -Chris
+       selectedX = a1.getName().charAt(0);
+       selectedY = a1.getName().charAt(1);
         targetLocation.setText("A, 1");
     }//GEN-LAST:event_a1ActionPerformed
 

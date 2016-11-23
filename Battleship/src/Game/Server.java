@@ -16,8 +16,12 @@ public class Server extends JFrame implements BattleshipData {
     private JTextArea jta = new JTextArea();
 
     private int[][] player1Board, player2Board;
-    private ObjectOutputStream toClient;
-    private ObjectInputStream fromClient;
+    
+                    DataInputStream player1Input ;
+                DataOutputStream player1Output;
+
+                DataInputStream player2Input;
+                DataOutputStream player2Output;
 
     public static void main(String[] args) {
         new Server();
@@ -27,7 +31,7 @@ public class Server extends JFrame implements BattleshipData {
         // Place text area on the frame
         setLayout(new BorderLayout());
         add(new JScrollPane(jta), BorderLayout.CENTER);
-        setTitle("MultiThreadServer");
+        setTitle("Battleship Server");
         setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true); // It is necessary to show the frame here!
@@ -122,11 +126,11 @@ public class Server extends JFrame implements BattleshipData {
         public void run() {
             try {
                 // Create data input and output streams
-                DataInputStream player1Input = new DataInputStream(player1.getInputStream());
-                DataOutputStream player1Output = new DataOutputStream(player1.getOutputStream());
+                 player1Input = new DataInputStream(player1.getInputStream());
+                player1Output = new DataOutputStream(player1.getOutputStream());
 
-                DataInputStream player2Input = new DataInputStream(player2.getInputStream());
-                DataOutputStream player2Output = new DataOutputStream(player2.getOutputStream());
+                player2Input = new DataInputStream(player2.getInputStream());
+                 player2Output = new DataOutputStream(player2.getOutputStream());
 
                 //runs 5 turns of placing ships 
                 for (int ii = 0; ii < SHIP_COUNT; ii++) {
