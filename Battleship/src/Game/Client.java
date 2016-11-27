@@ -1,6 +1,7 @@
 package Game;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
@@ -160,24 +161,23 @@ public class Client extends JApplet implements BattleshipData {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) 
-    {
-       // new Client().setVisible(true);
-        
-          JFrame frame = new JFrame("Battleship");
+    public static void main(String args[]) {
+        // new Client().setVisible(true);
 
-    // Create an instance of the applet
-    Client applet = new Client();
-    //applet.isStandAlone = true;
-    
-    frame.getContentPane().add(applet, BorderLayout.CENTER);
-    
-        frame.setSize(320, 300);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setVisible(true);
+        JFrame frame = new JFrame("Battleship");
+
+        // Create an instance of the applet
+        Client applet = new Client();
+        //applet.isStandAlone = true;
+
+        frame.getContentPane().add(applet, BorderLayout.CENTER);
+
+        frame.setSize(640, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
 
-    private static class Cell extends JPanel {
+    private class Cell extends JPanel {
 
         public int x, y, status;
 
@@ -187,39 +187,14 @@ public class Client extends JApplet implements BattleshipData {
             setBorder(new LineBorder(Color.black, 1)); // Set cell's border
             addMouseListener(new ClickListener());  // Register listener
         }
-    }
 
-    private static class ClickListener implements MouseListener {
+        private class ClickListener extends MouseAdapter {
 
-        public ClickListener() {
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                selectedX = x;
+                selectedY = y;
+            }
         }
     }
-
-    // Variables declaration - do not modify                     
-    // End of variables declaration                   
 }

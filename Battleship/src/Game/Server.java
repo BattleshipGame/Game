@@ -242,14 +242,11 @@ public class Server extends JFrame implements BattleshipData {
                             }
                         }
                     }
-
                     turnNumber++;
                 }
-
             } catch (IOException e) {
                 System.err.println("client-server connection failed");
             }
-        }
-        
+        }  
     }
 }
