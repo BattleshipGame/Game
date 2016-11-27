@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.*;
-import javax.swing.ButtonGroup;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -20,14 +19,15 @@ public class Client extends JApplet implements BattleshipData {
     private Cell[][] ownBoard = new Cell[SIDE_LENGTH][SIDE_LENGTH], opponentBoard = new Cell[SIDE_LENGTH][SIDE_LENGTH];
     private DataOutputStream toServer;
     private DataInputStream fromServer;
-    private String playerName;
     private Ship[] shipList;
-    private Point target;
     private boolean ready = false;
     private boolean isPlacementPhase;
     private int orientation = VERTICAL;
     private int selectedX, selectedY;
-    private JButton fireButton;
+    private JButton fireButton = new JButton();
+    private JTextArea systemOutput = new JTextArea();
+    private JLabel title = new JLabel();
+    private JLabel status = new JLabel();
 
     /**
      * Creates new form Client
@@ -37,7 +37,7 @@ public class Client extends JApplet implements BattleshipData {
         shipList = new Ship[SHIP_COUNT];
         initComponents();
         fireButton.setEnabled(false);
-        addButtons();
+        setVisible(true);
 
         try {
             Socket socket = new Socket("localhost", 8000);
@@ -51,68 +51,76 @@ public class Client extends JApplet implements BattleshipData {
 
     }
 
-    
-   
-                         
     private void initComponents() {
 
+        JPanel myPanel = new JPanel();
+        myPanel.setLayout(new GridLayout(SIDE_LENGTH, SIDE_LENGTH, 0, 0));
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                myPanel.add(ownBoard[i][j] = new Cell(i, j));
+            }
+        }
+
+        myPanel.setBorder(new LineBorder(Color.black, 1));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        title.setFont(new Font("SansSerif", Font.BOLD, 16));
+        title.setBorder(new LineBorder(Color.black, 1));
+        status.setBorder(new LineBorder(Color.black, 1));
+
+        add(myPanel, BorderLayout.SOUTH);
+        add(fireButton);
+        add(systemOutput);
         /*setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Battleship");
         setName("window"); // NOI18N
         setResizable(false);*/
-
-       
-    }                       
+    }
 
     private void placeShips() throws IOException {
-        
+
         fromServer.read();//recieves signal to begin each placement
-        
+
         int length = 0;
 
         //TODO Somehow obtain coordinates and length from player's placement board 
         for (int i = 0; i < shipList.length; i++) {
 
-            switch(i)//determines which ship to place, currently going from smallest to largest
+            switch (i)//determines which ship to place, currently going from smallest to largest
             {
-                case 0: 
+                case 0:
                     length = 2;
                     systemOutput.setText("Placing Patrol Boat: Size 2");
                     break;
-                    
-                    case 1: 
+
+                case 1:
                     length = 3;
                     systemOutput.setText("Placing Submarine #1: Size 3");
                     break;
-                    
-                    case 2: 
+
+                case 2:
                     length = 3;
                     systemOutput.setText("Placing Submarine #2: Size 3");
                     break;
-                    
-                    case 3: 
+
+                case 3:
                     length = 4;
                     systemOutput.setText("Placing Battleship: Size 4");
                     break;
-                    
-                    case 4: 
+
+                case 4:
                     length = 5;
                     systemOutput.setText("Placing Carrier: Size 5");
-                    break;                   
+                    break;
             }
-            
-            
+
             //sends details of verified placement to server 
             toServer.writeInt(selectedX);
             toServer.writeInt(selectedY);
             toServer.writeInt(orientation);
             toServer.writeInt(length);
-            
-            if(i >= SHIP_COUNT)//signals end of placement phase after all ships are placed
-            {
-                isPlacementPhase = false;
-            }
         }
+        isPlacementPhase = false;
+
     }
 
     /**
@@ -152,16 +160,28 @@ public class Client extends JApplet implements BattleshipData {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        new Client().setVisible(true);
+    public static void main(String args[]) 
+    {
+       // new Client().setVisible(true);
+        
+          JFrame frame = new JFrame("Battleship");
+
+    // Create an instance of the applet
+    Client applet = new Client();
+    //applet.isStandAlone = true;
+    
+    frame.getContentPane().add(applet, BorderLayout.CENTER);
+    
+        frame.setSize(320, 300);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setVisible(true);
     }
 
     private static class Cell extends JPanel {
-        public int x, y, status;
-        
 
-        public Cell(int x, int y)
-        {
+        public int x, y, status;
+
+        public Cell(int x, int y) {
             this.x = x;
             this.y = y;
             setBorder(new LineBorder(Color.black, 1)); // Set cell's border
