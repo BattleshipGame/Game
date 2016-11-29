@@ -1,9 +1,7 @@
 package Game;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
@@ -38,7 +36,7 @@ public class Client extends JApplet implements BattleshipData {
         shipList = new Ship[SHIP_COUNT];
         initComponents();
         fireButton.setEnabled(false);
-        setVisible(true);
+        super.setVisible(true);
 
         try {
             Socket socket = new Socket("localhost", 8000);
@@ -54,23 +52,33 @@ public class Client extends JApplet implements BattleshipData {
 
     private void initComponents() {
 
+        Container pane = getContentPane();
+
         JPanel myPanel = new JPanel();
+        JPanel opponentPanel = new JPanel();
+
         myPanel.setLayout(new GridLayout(SIDE_LENGTH, SIDE_LENGTH, 0, 0));
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        opponentPanel.setLayout(new GridLayout(SIDE_LENGTH, SIDE_LENGTH, 0, 0));
+        for (int i = 0; i < SIDE_LENGTH; i++) {
+            for (int j = 0; j < SIDE_LENGTH; j++) {
                 myPanel.add(ownBoard[i][j] = new Cell(i, j));
+                opponentPanel.add(opponentBoard[i][j] = new Cell(i, j));
             }
         }
 
         myPanel.setBorder(new LineBorder(Color.black, 1));
+        myPanel.setPreferredSize(new Dimension(100, 80));
+        opponentPanel.setBorder(new LineBorder(Color.black, 1));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 16));
         title.setBorder(new LineBorder(Color.black, 1));
         status.setBorder(new LineBorder(Color.black, 1));
 
-        add(myPanel, BorderLayout.SOUTH);
-        add(fireButton);
-        add(systemOutput);
+        pane.add(myPanel, BorderLayout.EAST);
+        pane.add(opponentPanel, BorderLayout.WEST);
+        pane.add(fireButton, BorderLayout.CENTER);
+        pane.add(systemOutput, BorderLayout.SOUTH);
+        pane.add(title);
         /*setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Battleship");
         setName("window"); // NOI18N
@@ -172,7 +180,7 @@ public class Client extends JApplet implements BattleshipData {
 
         frame.getContentPane().add(applet, BorderLayout.CENTER);
 
-        frame.setSize(640, 600);
+        frame.setSize(1000, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
