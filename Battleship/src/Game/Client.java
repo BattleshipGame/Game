@@ -184,7 +184,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
         playerPanel = new javax.swing.JPanel();
         playerLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         verticalCheckBox = new javax.swing.JCheckBox();
         startPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
@@ -220,34 +220,208 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             }
         });
         radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
+
+        b1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
+
+        d1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                d1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
+
+        c1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                c1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(c1, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 9, -1, -1));
+
+        h1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                h1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(h1, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 9, -1, -1));
+
+        e1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                e1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(e1, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 9, -1, -1));
+
+        f1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                f1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(f1, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 9, -1, -1));
+
+        g1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                g1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(g1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 9, -1, -1));
+
+        i1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                i1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(i1, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 9, -1, -1));
+
+        j1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                j1ActionPerformed(evt);
+            }
+        });
         radioPanel.add(j1, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 9, -1, -1));
+
+        j2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                j2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(j2, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 34, -1, -1));
+
+        a2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                a2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(a2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 34, -1, -1));
+
+        b2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(b2, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 34, -1, -1));
+
+        d2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                d2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(d2, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 34, -1, -1));
+
+        c2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                c2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(c2, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 34, -1, -1));
+
+        e2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                e2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(e2, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 34, -1, -1));
+
+        f2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                f2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(f2, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 34, -1, -1));
+
+        g2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                g2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(g2, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 34, -1, -1));
+
+        h2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                h2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(h2, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 34, -1, -1));
+
+        i2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                i2ActionPerformed(evt);
+            }
+        });
         radioPanel.add(i2, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 34, -1, -1));
+
+        a3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                a3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(a3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 59, -1, -1));
+
+        b3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                b3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(b3, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 59, -1, -1));
+
+        d3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                d3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(d3, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 59, -1, -1));
+
+        c3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                c3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(c3, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 59, -1, -1));
+
+        h3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                h3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(h3, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 59, -1, -1));
+
+        e3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                e3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(e3, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 59, -1, -1));
+
+        f3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                f3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(f3, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 59, -1, -1));
+
+        g3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                g3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(g3, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 59, -1, -1));
+
+        i3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                i3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(i3, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 59, -1, -1));
+
+        j3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                j3ActionPerformed(evt);
+            }
+        });
         radioPanel.add(j3, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 59, -1, -1));
         radioPanel.add(j4, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 84, -1, -1));
         radioPanel.add(a4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 84, -1, -1));
@@ -371,7 +545,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
                         .addComponent(opponentLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, opponentPanelLayout.createSequentialGroup()
-                        .addContainerGap(24, Short.MAX_VALUE)
+                        .addContainerGap(15, Short.MAX_VALUE)
                         .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -414,7 +588,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             .addGroup(opponentPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(opponentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -464,7 +638,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
         playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         playerLabel.setText("Player");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", null, null, null, null, null, null, null, null, null, null},
                 {"2", null, null, null, null, null, null, null, null, null, null},
@@ -489,9 +663,9 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCellSelectionEnabled(true);
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jTable1);
+        table.setCellSelectionEnabled(true);
+        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(table);
 
         verticalCheckBox.setSelected(true);
         verticalCheckBox.setText("Vertical");
@@ -508,7 +682,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addGap(135, 135, 135)
                 .addComponent(playerLabel)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap(134, Short.MAX_VALUE))
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -524,7 +698,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
                 .addContainerGap()
                 .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(verticalCheckBox)
                 .addGap(94, 94, 94))
@@ -706,8 +880,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     }//GEN-LAST:event_fireButtonMouseClicked
 
     private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
-        // target = new Point(a1.getName().charAt(0), a1.getName().charAt(1)); switching to Data streams only,
-        //therefore using selected x and y      -Chris
         selectedX = a1.getName().charAt(0);
         selectedY = a1.getName().charAt(1);
         targetLocation.setText("A, 1");
@@ -723,6 +895,180 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
         }
     }//GEN-LAST:event_verticalCheckBoxActionPerformed
 
+    private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
+        selectedX = b1.getName().charAt(0);
+        selectedY = b1.getName().charAt(1);
+        targetLocation.setText("B, 1");
+    }//GEN-LAST:event_b1ActionPerformed
+
+    private void c1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c1ActionPerformed
+        selectedX = c1.getName().charAt(0);
+        selectedY = c1.getName().charAt(1);
+        targetLocation.setText("C, 1");
+    }//GEN-LAST:event_c1ActionPerformed
+
+    private void d1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_d1ActionPerformed
+        selectedX = d1.getName().charAt(0);
+        selectedY = d1.getName().charAt(1);
+        targetLocation.setText("D, 1");
+    }//GEN-LAST:event_d1ActionPerformed
+
+    private void e1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e1ActionPerformed
+        selectedX = e1.getName().charAt(0);
+        selectedY = e1.getName().charAt(1);
+        targetLocation.setText("E, 1");
+    }//GEN-LAST:event_e1ActionPerformed
+
+    private void f1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_f1ActionPerformed
+        selectedX = f1.getName().charAt(0);
+        selectedY = f1.getName().charAt(1);
+        targetLocation.setText("F, 1");
+    }//GEN-LAST:event_f1ActionPerformed
+
+    private void g1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_g1ActionPerformed
+        selectedX = g1.getName().charAt(0);
+        selectedY = g1.getName().charAt(1);
+        targetLocation.setText("G, 1");
+    }//GEN-LAST:event_g1ActionPerformed
+
+    private void h1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h1ActionPerformed
+        selectedX = h1.getName().charAt(0);
+        selectedY = h1.getName().charAt(1);
+        targetLocation.setText("H, 1");
+    }//GEN-LAST:event_h1ActionPerformed
+
+    private void i1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_i1ActionPerformed
+        selectedX = i1.getName().charAt(0);
+        selectedY = i1.getName().charAt(1);
+        targetLocation.setText("I, 1");
+    }//GEN-LAST:event_i1ActionPerformed
+
+    private void j1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j1ActionPerformed
+        selectedX = j1.getName().charAt(0);
+        selectedY = j1.getName().charAt(1);
+        targetLocation.setText("J, 1");
+    }//GEN-LAST:event_j1ActionPerformed
+
+    private void a2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a2ActionPerformed
+        selectedX = a2.getName().charAt(0);
+        selectedY = a2.getName().charAt(1);
+        targetLocation.setText("A, 2");
+    }//GEN-LAST:event_a2ActionPerformed
+
+    private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
+        selectedX = b2.getName().charAt(0);
+        selectedY = b2.getName().charAt(1);
+        targetLocation.setText("B, 2");
+    }//GEN-LAST:event_b2ActionPerformed
+
+    private void c2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c2ActionPerformed
+        selectedX = c2.getName().charAt(0);
+        selectedY = c2.getName().charAt(1);
+        targetLocation.setText("C, 2");
+    }//GEN-LAST:event_c2ActionPerformed
+
+    private void d2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_d2ActionPerformed
+        selectedX = d2.getName().charAt(0);
+        selectedY = d2.getName().charAt(1);
+        targetLocation.setText("D, 2");
+    }//GEN-LAST:event_d2ActionPerformed
+
+    private void e2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e2ActionPerformed
+        selectedX = e2.getName().charAt(0);
+        selectedY = e2.getName().charAt(1);
+        targetLocation.setText("E, 2");
+    }//GEN-LAST:event_e2ActionPerformed
+
+    private void f2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_f2ActionPerformed
+        selectedX = f2.getName().charAt(0);
+        selectedY = f2.getName().charAt(1);
+        targetLocation.setText("F, 2");
+    }//GEN-LAST:event_f2ActionPerformed
+
+    private void g2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_g2ActionPerformed
+        selectedX = g2.getName().charAt(0);
+        selectedY = g2.getName().charAt(1);
+        targetLocation.setText("G, 2");
+    }//GEN-LAST:event_g2ActionPerformed
+
+    private void h2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h2ActionPerformed
+        selectedX = h2.getName().charAt(0);
+        selectedY = h2.getName().charAt(1);
+        targetLocation.setText("H, 2");
+    }//GEN-LAST:event_h2ActionPerformed
+
+    private void i2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_i2ActionPerformed
+        selectedX = i2.getName().charAt(0);
+        selectedY = i2.getName().charAt(1);
+        targetLocation.setText("I, 2");
+    }//GEN-LAST:event_i2ActionPerformed
+
+    private void j2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j2ActionPerformed
+        selectedX = j2.getName().charAt(0);
+        selectedY = j2.getName().charAt(1);
+        targetLocation.setText("J, 2");
+    }//GEN-LAST:event_j2ActionPerformed
+
+    private void a3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a3ActionPerformed
+        selectedX = a3.getName().charAt(0);
+        selectedY = a3.getName().charAt(1);
+        targetLocation.setText("A, 3");
+    }//GEN-LAST:event_a3ActionPerformed
+
+    private void b3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b3ActionPerformed
+        selectedX = b3.getName().charAt(0);
+        selectedY = b3.getName().charAt(1);
+        targetLocation.setText("B, 3");
+    }//GEN-LAST:event_b3ActionPerformed
+
+    private void c3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c3ActionPerformed
+        selectedX = c3.getName().charAt(0);
+        selectedY = c3.getName().charAt(1);
+        targetLocation.setText("C, 3");
+    }//GEN-LAST:event_c3ActionPerformed
+
+    private void d3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_d3ActionPerformed
+        selectedX = d3.getName().charAt(0);
+        selectedY = d3.getName().charAt(1);
+        targetLocation.setText("D, 3");
+    }//GEN-LAST:event_d3ActionPerformed
+
+    private void e3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e3ActionPerformed
+        selectedX = e3.getName().charAt(0);
+        selectedY = e3.getName().charAt(1);
+        targetLocation.setText("E, 3");
+    }//GEN-LAST:event_e3ActionPerformed
+
+    private void f3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_f3ActionPerformed
+        selectedX = f3.getName().charAt(0);
+        selectedY = f3.getName().charAt(1);
+        targetLocation.setText("F, 3");
+    }//GEN-LAST:event_f3ActionPerformed
+
+    private void g3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_g3ActionPerformed
+        selectedX = g3.getName().charAt(0);
+        selectedY = g3.getName().charAt(1);
+        targetLocation.setText("G, 3");
+    }//GEN-LAST:event_g3ActionPerformed
+
+    private void h3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h3ActionPerformed
+        selectedX = h3.getName().charAt(0);
+        selectedY = h3.getName().charAt(1);
+        targetLocation.setText("H, 3");
+    }//GEN-LAST:event_h3ActionPerformed
+
+    private void i3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_i3ActionPerformed
+        selectedX = i3.getName().charAt(0);
+        selectedY = i3.getName().charAt(1);
+        targetLocation.setText("I, 3");
+    }//GEN-LAST:event_i3ActionPerformed
+
+    private void j3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j3ActionPerformed
+        selectedX = j3.getName().charAt(0);
+        selectedY = j3.getName().charAt(1);
+        targetLocation.setText("J, 3");
+    }//GEN-LAST:event_j3ActionPerformed
+
     private void placeShips() throws IOException {
         
         fromServer.read();//recieves signal to begin each placement
@@ -735,32 +1081,33 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             switch(i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0: 
-                    length = 2;
-                    systemOutput.setText("Placing Patrol Boat: Size 2");
-                    break;
-                    
-                    case 1: 
-                    length = 3;
-                    systemOutput.setText("Placing Submarine #1: Size 3");
-                    break;
-                    
-                    case 2: 
-                    length = 3;
-                    systemOutput.setText("Placing Submarine #2: Size 3");
-                    break;
-                    
-                    case 3: 
-                    length = 4;
-                    systemOutput.setText("Placing Battleship: Size 4");
-                    break;
-                    
-                    case 4: 
-                    length = 5;
-                    systemOutput.setText("Placing Carrier: Size 5");
-                    break;                   
+                length = 2;
+                systemOutput.setText("Placing Patrol Boat: Size 2");
+                break;
+
+                case 1: 
+                length = 3;
+                systemOutput.setText("Placing Submarine #1: Size 3");
+                break;
+
+                case 2: 
+                length = 3;
+                systemOutput.setText("Placing Submarine #2: Size 3");
+                break;
+
+                case 3: 
+                length = 4;
+                systemOutput.setText("Placing Battleship: Size 4");
+                break;
+
+                case 4: 
+                length = 5;
+                systemOutput.setText("Placing Carrier: Size 5");
+                break;
             }
             
-            
+            selectedX = table.getSelectedColumn();
+            selectedY = table.getSelectedRow();
             //sends details of verified placement to server 
             toServer.writeInt(selectedX);
             toServer.writeInt(selectedY);
@@ -1043,7 +1390,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField nameInput;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel opponentLabel;
@@ -1055,6 +1401,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     private javax.swing.JButton readyButton;
     private javax.swing.JPanel startPanel;
     private javax.swing.JTextArea systemOutput;
+    private javax.swing.JTable table;
     private javax.swing.JLabel targetLabel;
     private javax.swing.JLabel targetLocation;
     private javax.swing.JCheckBox verticalCheckBox;
