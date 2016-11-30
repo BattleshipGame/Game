@@ -16,12 +16,12 @@ public class Server extends JFrame implements BattleshipData {
     private JTextArea jta = new JTextArea();
 
     private int[][] player1Board, player2Board;
-    
-                    DataInputStream player1Input ;
-                DataOutputStream player1Output;
 
-                DataInputStream player2Input;
-                DataOutputStream player2Output;
+    DataInputStream player1Input;
+    DataOutputStream player1Output;
+
+    DataInputStream player2Input;
+    DataOutputStream player2Output;
 
     public static void main(String[] args) {
         new Server();
@@ -96,7 +96,7 @@ public class Server extends JFrame implements BattleshipData {
         //creates grids that store the status of each tile on both game boards
         private int[][] player1Board, player2Board;
         private Ship[] player1Ships, player2Ships;
-        
+
         /**
          * Construct a thread
          */
@@ -116,7 +116,7 @@ public class Server extends JFrame implements BattleshipData {
                     player1Board[ii][jj] = EMPTY;
                 }
             }
-            */
+             */
         }
 
         /**
@@ -126,11 +126,11 @@ public class Server extends JFrame implements BattleshipData {
         public void run() {
             try {
                 // Create data input and output streams
-                 player1Input = new DataInputStream(player1.getInputStream());
+                player1Input = new DataInputStream(player1.getInputStream());
                 player1Output = new DataOutputStream(player1.getOutputStream());
 
                 player2Input = new DataInputStream(player2.getInputStream());
-                 player2Output = new DataOutputStream(player2.getOutputStream());
+                player2Output = new DataOutputStream(player2.getOutputStream());
 
                 //runs 5 turns of placing ships 
                 for (int ii = 0; ii < SHIP_COUNT; ii++) {
@@ -148,8 +148,7 @@ public class Server extends JFrame implements BattleshipData {
                             // along the line contain a ship tile
                             pointArray[jj] = new Point(point.x + jj, point.y);
                         }
-                    } 
-                    else //verttical orientation, starts at top and extends downward
+                    } else //verttical orientation, starts at top and extends downward
                     {
                         for (int jj = 0; jj < shipSize; jj++) {
                             player1Board[point.x][point.y - jj] = OCCUPIED;
@@ -208,7 +207,7 @@ public class Server extends JFrame implements BattleshipData {
 
                             if (p1Victory == false) {
                                 break;
-                                
+
                                 //TODO Write Victory code
                             }
                         }
@@ -227,7 +226,7 @@ public class Server extends JFrame implements BattleshipData {
                         player1Board[x][y] = MISS;
                         player2Output.writeInt(0);
                     }
-                    
+
                     if (turnNumber > 13)//only checks once enough moves have been made to win
                     {
                         boolean p1Victory = true;
@@ -237,7 +236,7 @@ public class Server extends JFrame implements BattleshipData {
 
                             if (p1Victory == false) {
                                 break;
-                                
+
                                 //TODO Write Victory code
                             }
                         }
@@ -250,6 +249,24 @@ public class Server extends JFrame implements BattleshipData {
                 System.err.println("client-server connection failed");
             }
         }
+        public void placeShips()
+        {
+            
+        }
+        public void receivePlacement()
+        {
+            
+        }
+        /**
+         * Checks to see if either player has won. Returns 1 if player 1 wins, 2 if player 2 wins, and 0 if no player
+         * wins on a turn
+         * @return The victory value
+         */
+        public int checkVictory()
+        {
+           return 0; 
+        }
         
+
     }
 }

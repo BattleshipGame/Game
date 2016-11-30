@@ -12,7 +12,7 @@ import javax.swing.JRadioButton;
  *
  * @author Maurice Ajluni
  */
-public class Client extends javax.swing.JFrame implements BattleshipData {
+public class Client extends javax.swing.JFrame implements BattleshipData, Runnable {
 
     private int[][] playerBoard;
     private DataOutputStream toServer;
@@ -47,6 +47,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
             System.err.println(ex.toString() + '\n');
         }
 
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
     /**
@@ -1070,59 +1072,54 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     }//GEN-LAST:event_j3ActionPerformed
 
     private void placeShips() throws IOException {
-        
+
         fromServer.read();//recieves signal to begin each placement
-        
+
         int length = 0;
 
         //TODO Somehow obtain coordinates and length from player's placement board 
         for (int i = 0; i < shipList.length; i++) {
 
-            switch(i)//determines which ship to place, currently going from smallest to largest
+            switch (i)//determines which ship to place, currently going from smallest to largest
             {
-                case 0: 
-                length = 2;
-                systemOutput.setText("Placing Patrol Boat: Size 2");
-                break;
+                case 0:
+                    length = 2;
+                    systemOutput.setText("Placing Patrol Boat: Size 2");
+                    break;
 
-                case 1: 
-                length = 3;
-                systemOutput.setText("Placing Submarine #1: Size 3");
-                break;
+                case 1:
+                    length = 3;
+                    systemOutput.setText("Placing Submarine #1: Size 3");
+                    break;
 
-                case 2: 
-                length = 3;
-                systemOutput.setText("Placing Submarine #2: Size 3");
-                break;
+                case 2:
+                    length = 3;
+                    systemOutput.setText("Placing Submarine #2: Size 3");
+                    break;
 
-                case 3: 
-                length = 4;
-                systemOutput.setText("Placing Battleship: Size 4");
-                break;
+                case 3:
+                    length = 4;
+                    systemOutput.setText("Placing Battleship: Size 4");
+                    break;
 
-                case 4: 
-                length = 5;
-                systemOutput.setText("Placing Carrier: Size 5");
-                break;
+                case 4:
+                    length = 5;
+                    systemOutput.setText("Placing Carrier: Size 5");
+                    break;
             }
-            
+
             selectedX = table.getSelectedColumn();
             selectedY = table.getSelectedRow();
             //sends details of verified placement to server 
             toServer.writeInt(selectedX);
             toServer.writeInt(selectedY);
             toServer.writeInt(orientation);
-            toServer.writeInt(length);
-            
-            if(i >= SHIP_COUNT)//signals end of placement phase after all ships are placed
-            {
-                isPlacementPhase = false;
-            }
+            toServer.writeInt(length);        
         }
+        isPlacementPhase = false;
     }
 
     /**
-     *
      * @param x
      * @param y
      * @param size
@@ -1406,4 +1403,16 @@ public class Client extends javax.swing.JFrame implements BattleshipData {
     private javax.swing.JLabel targetLocation;
     private javax.swing.JCheckBox verticalCheckBox;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        try {
+            isPlacementPhase = true;
+            placeShips();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 }
