@@ -19,18 +19,19 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private DataInputStream fromServer;
     private String playerName;
     private Ship[] shipList;
-    private JRadioButton[][] opponentBoard = new JRadioButton[10][10];
     private ButtonGroup group = new ButtonGroup();
     private Point target;
     private boolean ready = false;
+    private boolean actionPressed;
     private boolean isPlacementPhase;
     private int orientation = VERTICAL;
-    private int selectedX, selectedY;
+    private int selectedX, selectedY, length;
 
     /**
      * Creates new form Client
      */
     public Client() {
+        actionPressed = false;
         playerBoard = new int[SIDE_LENGTH][SIDE_LENGTH];
         shipList = new Ship[SHIP_COUNT];
         initComponents();
@@ -879,6 +880,26 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        else//placement phase button logic
+        {
+            try {
+                switch(verifyPlacement())
+                {
+                    case 1:
+                toServer.writeInt(table.getSelectedColumn());
+                toServer.writeInt(table.getSelectedRow());
+                toServer.writeInt(orientation);
+                toServer.writeInt(length);
+                break;
+                    case 2:
+                        systemOutput.setText("Cannot place over another ship, try again");
+                    case 3:
+                        systemOutput.setText("Would place the ship out of bounds, try again");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_fireButtonMouseClicked
 
     private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
@@ -1072,14 +1093,9 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     }//GEN-LAST:event_j3ActionPerformed
 
     private void placeShips() throws IOException {
-
-        fromServer.read();//recieves signal to begin each placement
-
-        int length = 0;
-
-        //TODO Somehow obtain coordinates and length from player's placement board 
+        // indicates which ship is being placed
         for (int i = 0; i < shipList.length; i++) {
-
+                    fromServer.read();//recieves signal to begin each placement
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0:
@@ -1107,14 +1123,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                     systemOutput.setText("Placing Carrier: Size 5");
                     break;
             }
-
-            selectedX = table.getSelectedColumn();
-            selectedY = table.getSelectedRow();
-            //sends details of verified placement to server 
-            toServer.writeInt(selectedX);
-            toServer.writeInt(selectedY);
-            toServer.writeInt(orientation);
-            toServer.writeInt(length);        
         }
         isPlacementPhase = false;
     }
@@ -1127,21 +1135,21 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
      * due to collision with another ship, and 3 if the attempted placement will
      * put the ship out of bounds.
      */
-    private int verifyPlacement(int x, int y, int size) {
+    private int verifyPlacement() {
         int result = 1;
 
         try {
             if (orientation == HORIZONTAL) {
-                for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
+                for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
                 {
-                    if (playerBoard[x + jj][y] == OCCUPIED) {
+                    if (playerBoard[selectedX + jj][selectedY] == OCCUPIED) {
                         result = 2;
                     }
                 }
             } else {
-                for (int jj = 0; jj < size; jj++)//iterates through each point along the attempted placement's line
+                for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
                 {
-                    if (playerBoard[x][y + jj] == OCCUPIED) {
+                    if (playerBoard[selectedX][selectedY + jj] == OCCUPIED) {
                         result = 2;
                     }
                 }
@@ -1408,6 +1416,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     public void run() {
         try {
             isPlacementPhase = true;
+            systemOutput.setText("Waiting for other player to connect");
+            fromServer.read();
             placeShips();
 
         } catch (IOException ex) {

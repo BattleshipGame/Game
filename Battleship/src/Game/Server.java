@@ -1,5 +1,8 @@
 package Game;
 
+import static Game.BattleshipData.HORIZONTAL;
+import static Game.BattleshipData.OCCUPIED;
+import static Game.BattleshipData.SHIP_COUNT;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -131,11 +134,87 @@ public class Server extends JFrame implements BattleshipData {
 
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
+                
+                player1Output.write(0);
+                player2Output.write(0);//sends ping to clients to indicate start of game
+                placeShips();
+                
+                int turnNumber = 1;
+                //lets players take turns firing at each other; broken when a player wins
+                while (true) {
 
+                    player1Output.writeChar(1);//sends a ping to the client
+                    int x = player1Input.readInt();//receives the coordinates of player 1's attack
+                    int y = player1Input.readInt();
+
+                    if (player2Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
+                    //attacked tile
+                    {
+                        player2Board[x][y] = DESTROYED;
+                        player1Output.writeInt(1);//sends confirmation of hit
+                    } else {
+                        player2Board[x][y] = MISS;
+                        player1Output.writeInt(0);//sends confirmation of miss
+                    }
+
+                    //check for p1 victory 
+                    if (turnNumber > 13)//only checks once enough moves have been made to win
+                    {
+                        boolean p1Victory = true;
+                        for (Ship ship : player2Ships)//iterates through
+                        {
+                            p1Victory = p1Victory && ship.isSunk();
+
+                            if (p1Victory == false) {
+                                break;
+
+                                //TODO Write Victory code
+                            }
+                        }
+                    }
+
+                    player1Output.writeChar(1);//sends a ping to the client
+                    x = player2Input.readInt();//receives the coordinates of player 2's attack
+                    y = player2Input.readInt();
+
+                    if (player1Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
+                    //attacked tile
+                    {
+                        player1Board[x][y] = DESTROYED;
+                        player2Output.writeInt(1);
+                    } else {
+                        player1Board[x][y] = MISS;
+                        player2Output.writeInt(0);
+                    }
+
+                    if (turnNumber > 13)//only checks once enough moves have been made to win
+                    {
+                        boolean p1Victory = true;
+                        for (Ship ship : player2Ships)//iterates through
+                        {
+                            p1Victory = p1Victory && ship.isSunk();
+
+                            if (p1Victory == false) {
+                                break;
+
+                                //TODO Write Victory code
+                            }
+                        }
+                    }
+
+                    turnNumber++;
+                }
+
+            } catch (IOException e) {
+                System.err.println("client-server connection failed");
+            }
+        }
+        public void placeShips() throws IOException
+        {           
                 //runs 5 turns of placing ships 
                 for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                    //at current stage, adds a ship along a line using a coordinate, orientation, and 
-                    //ship size
+                    player1Output.write(0);
+                    //adds a ship along a line using a coordinate, orientation, and ship size
                     Point point = new Point(player1Input.readInt(), player1Input.readInt());
                     int orientation = player1Input.readInt();
                     int shipSize = player1Input.readInt();
@@ -179,79 +258,6 @@ public class Server extends JFrame implements BattleshipData {
                     }
                 }
 
-                int turnNumber = 1;
-                //lets players take turns firing at each other; broken when a player wins
-                while (true) {
-
-                    player1Output.writeChar(1);//sends a ping to the client
-                    int x = player1Input.readInt();//receives the coordinates of player 1's attack
-                    int y = player1Input.readInt();
-
-                    if (player2Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
-                    //attacked tile
-                    {
-                        player2Board[x][y] = DESTROYED;
-                        player1Output.writeInt(1);//sends confirmation of hit
-                    } else {
-                        player2Board[x][y] = MISS;
-                        player1Output.writeInt(0);//sends confirmation of miss
-                    }
-
-                    //check for p1 victory 
-                    if (turnNumber > 13)//only checks once enough moves have been made to win
-                    {
-                        boolean p1Victory = true;
-                        for (Ship ship : player2Ships)//iterates through
-                        {
-                            p1Victory = p1Victory && ship.isSunk();
-
-                            if (p1Victory == false) {
-                                break;
-
-                                //TODO Write Victory code
-                            }
-                        }
-                    }
-
-                    player1Output.writeChar(1);//sends a ping to the client
-                    x = player2Input.readInt();//receives the coordinates of player 1's attack
-                    y = player2Input.readInt();
-
-                    if (player1Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
-                    //attacked tile
-                    {
-                        player1Board[x][y] = DESTROYED;
-                        player2Output.writeInt(1);
-                    } else {
-                        player1Board[x][y] = MISS;
-                        player2Output.writeInt(0);
-                    }
-
-                    if (turnNumber > 13)//only checks once enough moves have been made to win
-                    {
-                        boolean p1Victory = true;
-                        for (Ship ship : player2Ships)//iterates through
-                        {
-                            p1Victory = p1Victory && ship.isSunk();
-
-                            if (p1Victory == false) {
-                                break;
-
-                                //TODO Write Victory code
-                            }
-                        }
-                    }
-
-                    turnNumber++;
-                }
-
-            } catch (IOException e) {
-                System.err.println("client-server connection failed");
-            }
-        }
-        public void placeShips()
-        {
-            
         }
         public void receivePlacement()
         {
