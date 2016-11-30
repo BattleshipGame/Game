@@ -4,8 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
 
 /**
  * Runs the Client for the Battleship game
@@ -19,7 +17,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private DataInputStream fromServer;
     private String playerName;
     private Ship[] shipList;
-    private ButtonGroup group = new ButtonGroup();
     private Point target;
     private boolean ready = false;
     private boolean actionPressed;
@@ -36,8 +33,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         shipList = new Ship[SHIP_COUNT];
         initComponents();
         fireButton.setEnabled(false);
-        addButtons();
-
+        
         try {
             Socket socket = new Socket("localhost", 8000);
             fromServer = new DataInputStream(socket.getInputStream());
@@ -63,142 +59,21 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
         opponentPanel = new javax.swing.JPanel();
         opponentLabel = new javax.swing.JLabel();
-        radioPanel = new javax.swing.JPanel();
-        a1 = new javax.swing.JRadioButton();
-        b1 = new javax.swing.JRadioButton();
-        d1 = new javax.swing.JRadioButton();
-        c1 = new javax.swing.JRadioButton();
-        h1 = new javax.swing.JRadioButton();
-        e1 = new javax.swing.JRadioButton();
-        f1 = new javax.swing.JRadioButton();
-        g1 = new javax.swing.JRadioButton();
-        i1 = new javax.swing.JRadioButton();
-        j1 = new javax.swing.JRadioButton();
-        j2 = new javax.swing.JRadioButton();
-        a2 = new javax.swing.JRadioButton();
-        b2 = new javax.swing.JRadioButton();
-        d2 = new javax.swing.JRadioButton();
-        c2 = new javax.swing.JRadioButton();
-        e2 = new javax.swing.JRadioButton();
-        f2 = new javax.swing.JRadioButton();
-        g2 = new javax.swing.JRadioButton();
-        h2 = new javax.swing.JRadioButton();
-        i2 = new javax.swing.JRadioButton();
-        a3 = new javax.swing.JRadioButton();
-        b3 = new javax.swing.JRadioButton();
-        d3 = new javax.swing.JRadioButton();
-        c3 = new javax.swing.JRadioButton();
-        h3 = new javax.swing.JRadioButton();
-        e3 = new javax.swing.JRadioButton();
-        f3 = new javax.swing.JRadioButton();
-        g3 = new javax.swing.JRadioButton();
-        i3 = new javax.swing.JRadioButton();
-        j3 = new javax.swing.JRadioButton();
-        j4 = new javax.swing.JRadioButton();
-        a4 = new javax.swing.JRadioButton();
-        b4 = new javax.swing.JRadioButton();
-        d4 = new javax.swing.JRadioButton();
-        c4 = new javax.swing.JRadioButton();
-        e4 = new javax.swing.JRadioButton();
-        f4 = new javax.swing.JRadioButton();
-        g4 = new javax.swing.JRadioButton();
-        h4 = new javax.swing.JRadioButton();
-        i4 = new javax.swing.JRadioButton();
-        j5 = new javax.swing.JRadioButton();
-        a5 = new javax.swing.JRadioButton();
-        b5 = new javax.swing.JRadioButton();
-        d5 = new javax.swing.JRadioButton();
-        c5 = new javax.swing.JRadioButton();
-        e5 = new javax.swing.JRadioButton();
-        f5 = new javax.swing.JRadioButton();
-        g5 = new javax.swing.JRadioButton();
-        h5 = new javax.swing.JRadioButton();
-        i5 = new javax.swing.JRadioButton();
-        j6 = new javax.swing.JRadioButton();
-        a6 = new javax.swing.JRadioButton();
-        b6 = new javax.swing.JRadioButton();
-        d6 = new javax.swing.JRadioButton();
-        c6 = new javax.swing.JRadioButton();
-        e6 = new javax.swing.JRadioButton();
-        f6 = new javax.swing.JRadioButton();
-        g6 = new javax.swing.JRadioButton();
-        h6 = new javax.swing.JRadioButton();
-        i6 = new javax.swing.JRadioButton();
-        j7 = new javax.swing.JRadioButton();
-        a7 = new javax.swing.JRadioButton();
-        b7 = new javax.swing.JRadioButton();
-        d7 = new javax.swing.JRadioButton();
-        c7 = new javax.swing.JRadioButton();
-        e7 = new javax.swing.JRadioButton();
-        f7 = new javax.swing.JRadioButton();
-        g7 = new javax.swing.JRadioButton();
-        h7 = new javax.swing.JRadioButton();
-        i7 = new javax.swing.JRadioButton();
-        j8 = new javax.swing.JRadioButton();
-        a8 = new javax.swing.JRadioButton();
-        b8 = new javax.swing.JRadioButton();
-        d8 = new javax.swing.JRadioButton();
-        c8 = new javax.swing.JRadioButton();
-        e8 = new javax.swing.JRadioButton();
-        f8 = new javax.swing.JRadioButton();
-        g8 = new javax.swing.JRadioButton();
-        h8 = new javax.swing.JRadioButton();
-        i8 = new javax.swing.JRadioButton();
-        j9 = new javax.swing.JRadioButton();
-        a9 = new javax.swing.JRadioButton();
-        b9 = new javax.swing.JRadioButton();
-        d9 = new javax.swing.JRadioButton();
-        c9 = new javax.swing.JRadioButton();
-        e9 = new javax.swing.JRadioButton();
-        f9 = new javax.swing.JRadioButton();
-        g9 = new javax.swing.JRadioButton();
-        h9 = new javax.swing.JRadioButton();
-        i9 = new javax.swing.JRadioButton();
-        j10 = new javax.swing.JRadioButton();
-        a10 = new javax.swing.JRadioButton();
-        b10 = new javax.swing.JRadioButton();
-        d10 = new javax.swing.JRadioButton();
-        c10 = new javax.swing.JRadioButton();
-        e10 = new javax.swing.JRadioButton();
-        f10 = new javax.swing.JRadioButton();
-        g10 = new javax.swing.JRadioButton();
-        h10 = new javax.swing.JRadioButton();
-        i10 = new javax.swing.JRadioButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        opponentTable = new javax.swing.JTable();
         playerPanel = new javax.swing.JPanel();
         playerLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
-        verticalCheckBox = new javax.swing.JCheckBox();
-        startPanel = new javax.swing.JPanel();
-        nameLabel = new javax.swing.JLabel();
-        nameInput = new javax.swing.JTextField();
-        readyButton = new javax.swing.JButton();
+        playerTable = new javax.swing.JTable();
         outputPanel = new javax.swing.JPanel();
         targetLabel = new javax.swing.JLabel();
         fireButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         systemOutput = new javax.swing.JTextArea();
         targetLocation = new javax.swing.JLabel();
+        readyButton = new javax.swing.JButton();
+        placeButton = new javax.swing.JButton();
+        verticalCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Battleship");
@@ -212,436 +87,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         opponentLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         opponentLabel.setText("Opponent");
 
-        radioPanel.setName("grid"); // NOI18N
-        radioPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        a1.setHideActionText(true);
-        a1.setName("00"); // NOI18N
-        a1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                a1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(a1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 9, -1, -1));
-
-        b1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(b1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 9, -1, -1));
-
-        d1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                d1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(d1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 9, -1, -1));
-
-        c1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                c1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(c1, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 9, -1, -1));
-
-        h1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                h1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(h1, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 9, -1, -1));
-
-        e1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                e1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(e1, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 9, -1, -1));
-
-        f1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                f1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(f1, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 9, -1, -1));
-
-        g1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                g1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(g1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 9, -1, -1));
-
-        i1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                i1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(i1, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 9, -1, -1));
-
-        j1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                j1ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(j1, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 9, -1, -1));
-
-        j2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                j2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(j2, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 34, -1, -1));
-
-        a2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                a2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(a2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 34, -1, -1));
-
-        b2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(b2, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 34, -1, -1));
-
-        d2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                d2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(d2, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 34, -1, -1));
-
-        c2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                c2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(c2, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 34, -1, -1));
-
-        e2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                e2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(e2, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 34, -1, -1));
-
-        f2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                f2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(f2, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 34, -1, -1));
-
-        g2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                g2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(g2, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 34, -1, -1));
-
-        h2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                h2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(h2, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 34, -1, -1));
-
-        i2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                i2ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(i2, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 34, -1, -1));
-
-        a3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                a3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(a3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 59, -1, -1));
-
-        b3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(b3, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 59, -1, -1));
-
-        d3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                d3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(d3, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 59, -1, -1));
-
-        c3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                c3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(c3, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 59, -1, -1));
-
-        h3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                h3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(h3, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 59, -1, -1));
-
-        e3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                e3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(e3, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 59, -1, -1));
-
-        f3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                f3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(f3, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 59, -1, -1));
-
-        g3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                g3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(g3, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 59, -1, -1));
-
-        i3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                i3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(i3, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 59, -1, -1));
-
-        j3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                j3ActionPerformed(evt);
-            }
-        });
-        radioPanel.add(j3, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 59, -1, -1));
-        radioPanel.add(j4, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 84, -1, -1));
-        radioPanel.add(a4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 84, -1, -1));
-        radioPanel.add(b4, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 84, -1, -1));
-        radioPanel.add(d4, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 84, -1, -1));
-        radioPanel.add(c4, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 84, -1, -1));
-        radioPanel.add(e4, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 84, -1, -1));
-        radioPanel.add(f4, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 84, -1, -1));
-        radioPanel.add(g4, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 84, -1, -1));
-        radioPanel.add(h4, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 84, -1, -1));
-        radioPanel.add(i4, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 84, -1, -1));
-        radioPanel.add(j5, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 109, -1, -1));
-        radioPanel.add(a5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 109, -1, -1));
-        radioPanel.add(b5, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 109, -1, -1));
-        radioPanel.add(d5, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 109, -1, -1));
-        radioPanel.add(c5, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 109, -1, -1));
-        radioPanel.add(e5, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 109, -1, -1));
-        radioPanel.add(f5, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 109, -1, -1));
-        radioPanel.add(g5, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 109, -1, -1));
-        radioPanel.add(h5, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 109, -1, -1));
-        radioPanel.add(i5, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 109, -1, -1));
-        radioPanel.add(j6, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 134, -1, -1));
-        radioPanel.add(a6, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 134, -1, -1));
-        radioPanel.add(b6, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 134, -1, -1));
-        radioPanel.add(d6, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 134, -1, -1));
-        radioPanel.add(c6, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 134, -1, -1));
-        radioPanel.add(e6, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 134, -1, -1));
-        radioPanel.add(f6, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 134, -1, -1));
-        radioPanel.add(g6, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 134, -1, -1));
-        radioPanel.add(h6, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 134, -1, -1));
-        radioPanel.add(i6, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 134, -1, -1));
-        radioPanel.add(j7, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 159, -1, -1));
-        radioPanel.add(a7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 159, -1, -1));
-        radioPanel.add(b7, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 159, -1, -1));
-        radioPanel.add(d7, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 159, -1, -1));
-        radioPanel.add(c7, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 159, -1, -1));
-        radioPanel.add(e7, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 159, -1, -1));
-        radioPanel.add(f7, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 159, -1, -1));
-        radioPanel.add(g7, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 159, -1, -1));
-        radioPanel.add(h7, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 159, -1, -1));
-        radioPanel.add(i7, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 159, -1, -1));
-        radioPanel.add(j8, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 184, -1, -1));
-        radioPanel.add(a8, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 184, -1, -1));
-        radioPanel.add(b8, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 184, -1, -1));
-        radioPanel.add(d8, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 184, -1, -1));
-        radioPanel.add(c8, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 184, -1, -1));
-        radioPanel.add(e8, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 184, -1, -1));
-        radioPanel.add(f8, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 184, -1, -1));
-        radioPanel.add(g8, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 184, -1, -1));
-        radioPanel.add(h8, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 184, -1, -1));
-        radioPanel.add(i8, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 184, -1, -1));
-        radioPanel.add(j9, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 209, -1, -1));
-        radioPanel.add(a9, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 209, -1, -1));
-        radioPanel.add(b9, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 209, -1, -1));
-        radioPanel.add(d9, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 209, -1, -1));
-        radioPanel.add(c9, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 209, -1, -1));
-        radioPanel.add(e9, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 209, -1, -1));
-        radioPanel.add(f9, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 209, -1, -1));
-        radioPanel.add(g9, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 209, -1, -1));
-        radioPanel.add(h9, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 209, -1, -1));
-        radioPanel.add(i9, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 209, -1, -1));
-        radioPanel.add(j10, new org.netbeans.lib.awtextra.AbsoluteConstraints(233, 234, -1, -1));
-        radioPanel.add(a10, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 234, -1, -1));
-        radioPanel.add(b10, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 234, -1, -1));
-        radioPanel.add(d10, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 234, -1, -1));
-        radioPanel.add(c10, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 234, -1, -1));
-        radioPanel.add(e10, new org.netbeans.lib.awtextra.AbsoluteConstraints(108, 234, -1, -1));
-        radioPanel.add(f10, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 234, -1, -1));
-        radioPanel.add(g10, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 234, -1, -1));
-        radioPanel.add(h10, new org.netbeans.lib.awtextra.AbsoluteConstraints(183, 234, -1, -1));
-        radioPanel.add(i10, new org.netbeans.lib.awtextra.AbsoluteConstraints(208, 234, -1, -1));
-
-        jLabel1.setText("A");
-
-        jLabel2.setText("B");
-
-        jLabel3.setText("C");
-
-        jLabel4.setText("D");
-
-        jLabel5.setText("E");
-
-        jLabel6.setText("F");
-
-        jLabel7.setText("G");
-
-        jLabel8.setText("H");
-
-        jLabel9.setText("I");
-
-        jLabel10.setText("J");
-
-        jLabel11.setText("1");
-
-        jLabel12.setText("2");
-
-        jLabel13.setText("3");
-
-        jLabel14.setText("4");
-
-        jLabel15.setText("5");
-
-        jLabel16.setText("6");
-
-        jLabel17.setText("7");
-
-        jLabel18.setText("8");
-
-        jLabel19.setText("9");
-
-        jLabel20.setText("10");
-
-        javax.swing.GroupLayout opponentPanelLayout = new javax.swing.GroupLayout(opponentPanel);
-        opponentPanel.setLayout(opponentPanelLayout);
-        opponentPanelLayout.setHorizontalGroup(
-            opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(opponentPanelLayout.createSequentialGroup()
-                .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(opponentPanelLayout.createSequentialGroup()
-                        .addGap(124, 124, 124)
-                        .addComponent(opponentLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, opponentPanelLayout.createSequentialGroup()
-                        .addContainerGap(15, Short.MAX_VALUE)
-                        .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radioPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-            .addGroup(opponentPanelLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel8)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel9)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel10)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        opponentPanelLayout.setVerticalGroup(
-            opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(opponentPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(opponentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10))
-                .addGroup(opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(opponentPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(radioPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(opponentPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel16)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel18)
-                        .addGap(13, 13, 13)
-                        .addComponent(jLabel19)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel20)))
-                .addContainerGap())
-        );
-
-        opponentLabel.getAccessibleContext().setAccessibleName("playerName");
-        radioPanel.getAccessibleContext().setAccessibleName("grid");
-
-        playerPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        playerPanel.setName("opponentPanel"); // NOI18N
-        playerPanel.setPreferredSize(new java.awt.Dimension(500, 500));
-
-        playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        playerLabel.setText("Player");
-
-        table.setModel(new javax.swing.table.DefaultTableModel(
+        opponentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", null, null, null, null, null, null, null, null, null, null},
                 {"2", null, null, null, null, null, null, null, null, null, null},
@@ -655,7 +101,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 {"10", null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
+                "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -666,17 +112,75 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 return canEdit [columnIndex];
             }
         });
-        table.setCellSelectionEnabled(true);
-        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(table);
-
-        verticalCheckBox.setSelected(true);
-        verticalCheckBox.setText("Vertical");
-        verticalCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verticalCheckBoxActionPerformed(evt);
+        opponentTable.setCellSelectionEnabled(true);
+        opponentTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        opponentTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                opponentTableMouseClicked(evt);
             }
         });
+        jScrollPane3.setViewportView(opponentTable);
+
+        javax.swing.GroupLayout opponentPanelLayout = new javax.swing.GroupLayout(opponentPanel);
+        opponentPanel.setLayout(opponentPanelLayout);
+        opponentPanelLayout.setHorizontalGroup(
+            opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(opponentPanelLayout.createSequentialGroup()
+                .addGap(124, 124, 124)
+                .addComponent(opponentLabel)
+                .addContainerGap(125, Short.MAX_VALUE))
+            .addGroup(opponentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        opponentPanelLayout.setVerticalGroup(
+            opponentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(opponentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(opponentLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        opponentLabel.getAccessibleContext().setAccessibleName("playerName");
+
+        playerPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        playerPanel.setName("opponentPanel"); // NOI18N
+        playerPanel.setPreferredSize(new java.awt.Dimension(500, 500));
+
+        playerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        playerLabel.setText("Player");
+
+        playerTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", null, null, null, null, null, null, null, null, null, null},
+                {"2", null, null, null, null, null, null, null, null, null, null},
+                {"3", null, null, null, null, null, null, null, null, null, null},
+                {"4", null, null, null, null, null, null, null, null, null, null},
+                {"5", null, null, null, null, null, null, null, null, null, null},
+                {"6", null, null, null, null, null, null, null, null, null, null},
+                {"7", null, null, null, null, null, null, null, null, null, null},
+                {"8", null, null, null, null, null, null, null, null, null, null},
+                {"9", null, null, null, null, null, null, null, null, null, null},
+                {"10", null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        playerTable.setCellSelectionEnabled(true);
+        playerTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(playerTable);
 
         javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
         playerPanel.setLayout(playerPanelLayout);
@@ -688,11 +192,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 .addContainerGap(134, Short.MAX_VALUE))
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(playerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(playerPanelLayout.createSequentialGroup()
-                        .addComponent(verticalCheckBox)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
         playerPanelLayout.setVerticalGroup(
@@ -701,52 +201,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 .addContainerGap()
                 .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(verticalCheckBox)
-                .addGap(94, 94, 94))
-        );
-
-        startPanel.setName("gameStart"); // NOI18N
-
-        nameLabel.setText("Name:");
-
-        nameInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameInputActionPerformed(evt);
-            }
-        });
-
-        readyButton.setText("Ready");
-        readyButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                readyButtonMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout startPanelLayout = new javax.swing.GroupLayout(startPanel);
-        startPanel.setLayout(startPanelLayout);
-        startPanelLayout.setHorizontalGroup(
-            startPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(startPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(nameLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameInput))
-            .addGroup(startPanelLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addComponent(readyButton)
-                .addGap(0, 46, Short.MAX_VALUE))
-        );
-        startPanelLayout.setVerticalGroup(
-            startPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(startPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(startPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameLabel)
-                    .addComponent(nameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(readyButton)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -755,6 +210,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         targetLabel.setText("Target:");
 
         fireButton.setText("FIRE");
+        fireButton.setEnabled(false);
         fireButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 fireButtonMouseClicked(evt);
@@ -766,6 +222,31 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         jScrollPane2.setViewportView(systemOutput);
 
         targetLocation.setText("-,-");
+
+        readyButton.setText("Ready");
+        readyButton.setEnabled(false);
+        readyButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                readyButtonMouseClicked(evt);
+            }
+        });
+
+        placeButton.setText("Place");
+        placeButton.setEnabled(false);
+        placeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                placeButtonActionPerformed(evt);
+            }
+        });
+
+        verticalCheckBox.setSelected(true);
+        verticalCheckBox.setText("Vertical");
+        verticalCheckBox.setEnabled(false);
+        verticalCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verticalCheckBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
         outputPanel.setLayout(outputPanelLayout);
@@ -781,7 +262,12 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                         .addComponent(targetLocation)
                         .addGap(55, 55, 55)
                         .addComponent(fireButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(verticalCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(placeButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(readyButton)))
                 .addContainerGap())
         );
         outputPanelLayout.setVerticalGroup(
@@ -789,12 +275,16 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             .addGroup(outputPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fireButton)
+                    .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(fireButton)
+                        .addComponent(readyButton)
+                        .addComponent(placeButton)
+                        .addComponent(verticalCheckBox))
                     .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(targetLabel)
                         .addComponent(targetLocation)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -805,49 +295,30 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(opponentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(playerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(startPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(playerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(opponentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(startPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(playerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(opponentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(outputPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         opponentPanel.getAccessibleContext().setAccessibleName("opponentPanel");
-        startPanel.getAccessibleContext().setAccessibleName("gameStart");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    //Assigns this players name to the input
-    private void nameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameInputActionPerformed
-        playerName = nameInput.getText();
-
-        try {
-            toServer.writeChars(playerName);
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_nameInputActionPerformed
 
     //Tells the server this players name and ready status
     private void readyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readyButtonMouseClicked
@@ -886,8 +357,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 switch(verifyPlacement())
                 {
                     case 1:
-                toServer.writeInt(table.getSelectedColumn());
-                toServer.writeInt(table.getSelectedRow());
+                toServer.writeInt(playerTable.getSelectedColumn());
+                toServer.writeInt(playerTable.getSelectedRow());
                 toServer.writeInt(orientation);
                 toServer.writeInt(length);
                 break;
@@ -902,12 +373,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
-    private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
-        selectedX = a1.getName().charAt(0);
-        selectedY = a1.getName().charAt(1);
-        targetLocation.setText("A, 1");
-    }//GEN-LAST:event_a1ActionPerformed
-
     private void verticalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verticalCheckBoxActionPerformed
         // TODO add your handling code here:
         if (orientation == VERTICAL)//switches between vertical and horizontal ship placement
@@ -918,182 +383,22 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         }
     }//GEN-LAST:event_verticalCheckBoxActionPerformed
 
-    private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
-        selectedX = b1.getName().charAt(0);
-        selectedY = b1.getName().charAt(1);
-        targetLocation.setText("B, 1");
-    }//GEN-LAST:event_b1ActionPerformed
+    private void opponentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opponentTableMouseClicked
+        selectedX = opponentTable.getSelectedColumn();
+        selectedY = opponentTable.getSelectedRow() + 1;
+        targetLocation.setText(selectedX + ", " + selectedY);
+    }//GEN-LAST:event_opponentTableMouseClicked
 
-    private void c1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c1ActionPerformed
-        selectedX = c1.getName().charAt(0);
-        selectedY = c1.getName().charAt(1);
-        targetLocation.setText("C, 1");
-    }//GEN-LAST:event_c1ActionPerformed
-
-    private void d1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_d1ActionPerformed
-        selectedX = d1.getName().charAt(0);
-        selectedY = d1.getName().charAt(1);
-        targetLocation.setText("D, 1");
-    }//GEN-LAST:event_d1ActionPerformed
-
-    private void e1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e1ActionPerformed
-        selectedX = e1.getName().charAt(0);
-        selectedY = e1.getName().charAt(1);
-        targetLocation.setText("E, 1");
-    }//GEN-LAST:event_e1ActionPerformed
-
-    private void f1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_f1ActionPerformed
-        selectedX = f1.getName().charAt(0);
-        selectedY = f1.getName().charAt(1);
-        targetLocation.setText("F, 1");
-    }//GEN-LAST:event_f1ActionPerformed
-
-    private void g1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_g1ActionPerformed
-        selectedX = g1.getName().charAt(0);
-        selectedY = g1.getName().charAt(1);
-        targetLocation.setText("G, 1");
-    }//GEN-LAST:event_g1ActionPerformed
-
-    private void h1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h1ActionPerformed
-        selectedX = h1.getName().charAt(0);
-        selectedY = h1.getName().charAt(1);
-        targetLocation.setText("H, 1");
-    }//GEN-LAST:event_h1ActionPerformed
-
-    private void i1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_i1ActionPerformed
-        selectedX = i1.getName().charAt(0);
-        selectedY = i1.getName().charAt(1);
-        targetLocation.setText("I, 1");
-    }//GEN-LAST:event_i1ActionPerformed
-
-    private void j1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j1ActionPerformed
-        selectedX = j1.getName().charAt(0);
-        selectedY = j1.getName().charAt(1);
-        targetLocation.setText("J, 1");
-    }//GEN-LAST:event_j1ActionPerformed
-
-    private void a2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a2ActionPerformed
-        selectedX = a2.getName().charAt(0);
-        selectedY = a2.getName().charAt(1);
-        targetLocation.setText("A, 2");
-    }//GEN-LAST:event_a2ActionPerformed
-
-    private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
-        selectedX = b2.getName().charAt(0);
-        selectedY = b2.getName().charAt(1);
-        targetLocation.setText("B, 2");
-    }//GEN-LAST:event_b2ActionPerformed
-
-    private void c2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c2ActionPerformed
-        selectedX = c2.getName().charAt(0);
-        selectedY = c2.getName().charAt(1);
-        targetLocation.setText("C, 2");
-    }//GEN-LAST:event_c2ActionPerformed
-
-    private void d2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_d2ActionPerformed
-        selectedX = d2.getName().charAt(0);
-        selectedY = d2.getName().charAt(1);
-        targetLocation.setText("D, 2");
-    }//GEN-LAST:event_d2ActionPerformed
-
-    private void e2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e2ActionPerformed
-        selectedX = e2.getName().charAt(0);
-        selectedY = e2.getName().charAt(1);
-        targetLocation.setText("E, 2");
-    }//GEN-LAST:event_e2ActionPerformed
-
-    private void f2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_f2ActionPerformed
-        selectedX = f2.getName().charAt(0);
-        selectedY = f2.getName().charAt(1);
-        targetLocation.setText("F, 2");
-    }//GEN-LAST:event_f2ActionPerformed
-
-    private void g2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_g2ActionPerformed
-        selectedX = g2.getName().charAt(0);
-        selectedY = g2.getName().charAt(1);
-        targetLocation.setText("G, 2");
-    }//GEN-LAST:event_g2ActionPerformed
-
-    private void h2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h2ActionPerformed
-        selectedX = h2.getName().charAt(0);
-        selectedY = h2.getName().charAt(1);
-        targetLocation.setText("H, 2");
-    }//GEN-LAST:event_h2ActionPerformed
-
-    private void i2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_i2ActionPerformed
-        selectedX = i2.getName().charAt(0);
-        selectedY = i2.getName().charAt(1);
-        targetLocation.setText("I, 2");
-    }//GEN-LAST:event_i2ActionPerformed
-
-    private void j2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j2ActionPerformed
-        selectedX = j2.getName().charAt(0);
-        selectedY = j2.getName().charAt(1);
-        targetLocation.setText("J, 2");
-    }//GEN-LAST:event_j2ActionPerformed
-
-    private void a3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a3ActionPerformed
-        selectedX = a3.getName().charAt(0);
-        selectedY = a3.getName().charAt(1);
-        targetLocation.setText("A, 3");
-    }//GEN-LAST:event_a3ActionPerformed
-
-    private void b3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b3ActionPerformed
-        selectedX = b3.getName().charAt(0);
-        selectedY = b3.getName().charAt(1);
-        targetLocation.setText("B, 3");
-    }//GEN-LAST:event_b3ActionPerformed
-
-    private void c3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c3ActionPerformed
-        selectedX = c3.getName().charAt(0);
-        selectedY = c3.getName().charAt(1);
-        targetLocation.setText("C, 3");
-    }//GEN-LAST:event_c3ActionPerformed
-
-    private void d3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_d3ActionPerformed
-        selectedX = d3.getName().charAt(0);
-        selectedY = d3.getName().charAt(1);
-        targetLocation.setText("D, 3");
-    }//GEN-LAST:event_d3ActionPerformed
-
-    private void e3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_e3ActionPerformed
-        selectedX = e3.getName().charAt(0);
-        selectedY = e3.getName().charAt(1);
-        targetLocation.setText("E, 3");
-    }//GEN-LAST:event_e3ActionPerformed
-
-    private void f3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_f3ActionPerformed
-        selectedX = f3.getName().charAt(0);
-        selectedY = f3.getName().charAt(1);
-        targetLocation.setText("F, 3");
-    }//GEN-LAST:event_f3ActionPerformed
-
-    private void g3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_g3ActionPerformed
-        selectedX = g3.getName().charAt(0);
-        selectedY = g3.getName().charAt(1);
-        targetLocation.setText("G, 3");
-    }//GEN-LAST:event_g3ActionPerformed
-
-    private void h3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_h3ActionPerformed
-        selectedX = h3.getName().charAt(0);
-        selectedY = h3.getName().charAt(1);
-        targetLocation.setText("H, 3");
-    }//GEN-LAST:event_h3ActionPerformed
-
-    private void i3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_i3ActionPerformed
-        selectedX = i3.getName().charAt(0);
-        selectedY = i3.getName().charAt(1);
-        targetLocation.setText("I, 3");
-    }//GEN-LAST:event_i3ActionPerformed
-
-    private void j3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j3ActionPerformed
-        selectedX = j3.getName().charAt(0);
-        selectedY = j3.getName().charAt(1);
-        targetLocation.setText("J, 3");
-    }//GEN-LAST:event_j3ActionPerformed
+    private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
+        selectedX = playerTable.getSelectedColumn() - 1;
+        selectedY = playerTable.getSelectedRow();
+        
+        systemOutput.append("Place ship at \"" + selectedX + ", " + selectedY + "\"?");
+    }//GEN-LAST:event_placeButtonActionPerformed
 
     private void placeShips() throws IOException {
         // indicates which ship is being placed
+        placeButton.setEnabled(true);
         for (int i = 0; i < shipList.length; i++) {
                     fromServer.read();//recieves signal to begin each placement
             switch (i)//determines which ship to place, currently going from smallest to largest
@@ -1125,6 +430,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             }
         }
         isPlacementPhase = false;
+        placeButton.setEnabled(false);
     }
 
     /**
@@ -1160,110 +466,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         return result;
     }
 
-    //Adds radio buttons to Button Group so only one can be chosen
-    public void addButtons() {
-        group.add(a1);
-        group.add(b1);
-        group.add(c1);
-        group.add(d1);
-        group.add(e1);
-        group.add(f1);
-        group.add(g1);
-        group.add(h1);
-        group.add(i1);
-        group.add(j1);
-        group.add(a2);
-        group.add(b2);
-        group.add(c2);
-        group.add(d2);
-        group.add(e2);
-        group.add(f2);
-        group.add(g2);
-        group.add(h2);
-        group.add(i2);
-        group.add(j2);
-        group.add(a3);
-        group.add(b3);
-        group.add(c3);
-        group.add(d3);
-        group.add(e3);
-        group.add(f3);
-        group.add(g3);
-        group.add(h3);
-        group.add(i3);
-        group.add(j3);
-        group.add(a4);
-        group.add(b4);
-        group.add(c4);
-        group.add(d4);
-        group.add(e4);
-        group.add(f4);
-        group.add(g4);
-        group.add(h4);
-        group.add(i4);
-        group.add(j4);
-        group.add(a5);
-        group.add(b5);
-        group.add(c5);
-        group.add(d5);
-        group.add(e5);
-        group.add(f5);
-        group.add(g5);
-        group.add(h5);
-        group.add(i5);
-        group.add(j5);
-        group.add(a6);
-        group.add(b6);
-        group.add(c6);
-        group.add(d6);
-        group.add(e6);
-        group.add(f6);
-        group.add(g6);
-        group.add(h6);
-        group.add(i6);
-        group.add(j6);
-        group.add(a7);
-        group.add(b7);
-        group.add(c7);
-        group.add(d7);
-        group.add(e7);
-        group.add(f7);
-        group.add(g7);
-        group.add(h7);
-        group.add(i7);
-        group.add(j7);
-        group.add(a8);
-        group.add(b8);
-        group.add(c8);
-        group.add(d8);
-        group.add(e8);
-        group.add(f8);
-        group.add(g8);
-        group.add(h8);
-        group.add(i8);
-        group.add(j8);
-        group.add(a9);
-        group.add(b9);
-        group.add(c9);
-        group.add(d9);
-        group.add(e9);
-        group.add(f9);
-        group.add(g9);
-        group.add(h9);
-        group.add(i9);
-        group.add(j9);
-        group.add(a10);
-        group.add(b10);
-        group.add(c10);
-        group.add(d10);
-        group.add(e10);
-        group.add(f10);
-        group.add(g10);
-        group.add(h10);
-        group.add(i10);
-        group.add(j10);
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -1272,141 +474,20 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JRadioButton a1;
-    private javax.swing.JRadioButton a10;
-    private javax.swing.JRadioButton a2;
-    private javax.swing.JRadioButton a3;
-    private javax.swing.JRadioButton a4;
-    private javax.swing.JRadioButton a5;
-    private javax.swing.JRadioButton a6;
-    private javax.swing.JRadioButton a7;
-    private javax.swing.JRadioButton a8;
-    private javax.swing.JRadioButton a9;
-    private javax.swing.JRadioButton b1;
-    private javax.swing.JRadioButton b10;
-    private javax.swing.JRadioButton b2;
-    private javax.swing.JRadioButton b3;
-    private javax.swing.JRadioButton b4;
-    private javax.swing.JRadioButton b5;
-    private javax.swing.JRadioButton b6;
-    private javax.swing.JRadioButton b7;
-    private javax.swing.JRadioButton b8;
-    private javax.swing.JRadioButton b9;
-    private javax.swing.JRadioButton c1;
-    private javax.swing.JRadioButton c10;
-    private javax.swing.JRadioButton c2;
-    private javax.swing.JRadioButton c3;
-    private javax.swing.JRadioButton c4;
-    private javax.swing.JRadioButton c5;
-    private javax.swing.JRadioButton c6;
-    private javax.swing.JRadioButton c7;
-    private javax.swing.JRadioButton c8;
-    private javax.swing.JRadioButton c9;
-    private javax.swing.JRadioButton d1;
-    private javax.swing.JRadioButton d10;
-    private javax.swing.JRadioButton d2;
-    private javax.swing.JRadioButton d3;
-    private javax.swing.JRadioButton d4;
-    private javax.swing.JRadioButton d5;
-    private javax.swing.JRadioButton d6;
-    private javax.swing.JRadioButton d7;
-    private javax.swing.JRadioButton d8;
-    private javax.swing.JRadioButton d9;
-    private javax.swing.JRadioButton e1;
-    private javax.swing.JRadioButton e10;
-    private javax.swing.JRadioButton e2;
-    private javax.swing.JRadioButton e3;
-    private javax.swing.JRadioButton e4;
-    private javax.swing.JRadioButton e5;
-    private javax.swing.JRadioButton e6;
-    private javax.swing.JRadioButton e7;
-    private javax.swing.JRadioButton e8;
-    private javax.swing.JRadioButton e9;
-    private javax.swing.JRadioButton f1;
-    private javax.swing.JRadioButton f10;
-    private javax.swing.JRadioButton f2;
-    private javax.swing.JRadioButton f3;
-    private javax.swing.JRadioButton f4;
-    private javax.swing.JRadioButton f5;
-    private javax.swing.JRadioButton f6;
-    private javax.swing.JRadioButton f7;
-    private javax.swing.JRadioButton f8;
-    private javax.swing.JRadioButton f9;
     private javax.swing.JButton fireButton;
-    private javax.swing.JRadioButton g1;
-    private javax.swing.JRadioButton g10;
-    private javax.swing.JRadioButton g2;
-    private javax.swing.JRadioButton g3;
-    private javax.swing.JRadioButton g4;
-    private javax.swing.JRadioButton g5;
-    private javax.swing.JRadioButton g6;
-    private javax.swing.JRadioButton g7;
-    private javax.swing.JRadioButton g8;
-    private javax.swing.JRadioButton g9;
-    private javax.swing.JRadioButton h1;
-    private javax.swing.JRadioButton h10;
-    private javax.swing.JRadioButton h2;
-    private javax.swing.JRadioButton h3;
-    private javax.swing.JRadioButton h4;
-    private javax.swing.JRadioButton h5;
-    private javax.swing.JRadioButton h6;
-    private javax.swing.JRadioButton h7;
-    private javax.swing.JRadioButton h8;
-    private javax.swing.JRadioButton h9;
-    private javax.swing.JRadioButton i1;
-    private javax.swing.JRadioButton i10;
-    private javax.swing.JRadioButton i2;
-    private javax.swing.JRadioButton i3;
-    private javax.swing.JRadioButton i4;
-    private javax.swing.JRadioButton i5;
-    private javax.swing.JRadioButton i6;
-    private javax.swing.JRadioButton i7;
-    private javax.swing.JRadioButton i8;
-    private javax.swing.JRadioButton i9;
-    private javax.swing.JRadioButton j1;
-    private javax.swing.JRadioButton j10;
-    private javax.swing.JRadioButton j2;
-    private javax.swing.JRadioButton j3;
-    private javax.swing.JRadioButton j4;
-    private javax.swing.JRadioButton j5;
-    private javax.swing.JRadioButton j6;
-    private javax.swing.JRadioButton j7;
-    private javax.swing.JRadioButton j8;
-    private javax.swing.JRadioButton j9;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField nameInput;
-    private javax.swing.JLabel nameLabel;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel opponentLabel;
     private javax.swing.JPanel opponentPanel;
+    private javax.swing.JTable opponentTable;
     private javax.swing.JPanel outputPanel;
+    private javax.swing.JButton placeButton;
     private javax.swing.JLabel playerLabel;
     private javax.swing.JPanel playerPanel;
-    private javax.swing.JPanel radioPanel;
+    private javax.swing.JTable playerTable;
     private javax.swing.JButton readyButton;
-    private javax.swing.JPanel startPanel;
     private javax.swing.JTextArea systemOutput;
-    private javax.swing.JTable table;
     private javax.swing.JLabel targetLabel;
     private javax.swing.JLabel targetLocation;
     private javax.swing.JCheckBox verticalCheckBox;
