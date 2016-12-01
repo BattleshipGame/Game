@@ -371,15 +371,16 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             try {
                 switch (verifyPlacement()) {
                     case 1:
+                        placeShip();
                         toServer.writeInt(playerTable.getSelectedColumn() - 1);
                         toServer.writeInt(playerTable.getSelectedRow());
                         toServer.writeInt(orientation);
                         toServer.writeInt(length);
                         break;
                     case 2:
-                        systemOutput.append("Cannot place over another ship, try again");
+                        systemOutput.append("Cannot place over another ship, try again \n");
                     case 3:
-                        systemOutput.append("Would place the ship out of bounds, try again");
+                        systemOutput.append("Would place the ship out of bounds, try again\n");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -447,14 +448,18 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
                 playerBoard[selectedX + jj][selectedY] = OCCUPIED;
-
+                JLabel l = (JLabel) playerTable.findComponentAt(selectedX + jj, selectedY);
+                l.setBackground(Color.gray);
             }
         } else {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
                 playerBoard[selectedX][selectedY + jj] = OCCUPIED;
+                JLabel l = (JLabel) playerTable.findComponentAt(selectedX, selectedY + jj);
+                l.setBackground(Color.gray);
             }
         }
+        systemOutput.append("Waiting for other player");
     }
 
     /**
@@ -521,8 +526,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     @Override
     public void run() {
         try {
+            player = fromServer.readInt();
             isPlacementPhase = true;
             systemOutput.setText("Waiting for other player to connect");
+            fromServer.read();
             placeShips();
 
             while (playing) {
