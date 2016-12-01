@@ -1,17 +1,29 @@
 package Game;
 
+import java.io.Serializable;
 /**
  * Represents a ship on the game board
  * @author Maurice Ajluni
  */
-public class Ship
+public abstract class Ship extends Board
 {
     int size;
     Point[] coordinates;
     int[] hits;
     String name;
     
+    public Ship(int x, int y, int size, boolean horizontal)
+    {
+        super (x, y, size, horizontal);
+        
+    }
+    
+    public enum shipType implements Serializable
+    {
+        Carrier, Destroyer, PatrolBoat, Submarine, BattleShip;
+    }
     //Creates a new Ship with a Point[]
+    /*
     public Ship(Point[] points)
     {
         size = points.length;
@@ -36,9 +48,11 @@ public class Ship
                 name = "Ship";
                 break;
         }
+        
     }
-    
+    */
     //Determines if the Ship is sunk
+    @Override
     public boolean isSunk()
     {
         for(int i : hits)
