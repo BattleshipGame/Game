@@ -1,9 +1,11 @@
 package Game;
 
+import java.awt.Color;
 import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 
 /**
  * Runs the Client for the Battleship game
@@ -340,14 +342,19 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 toServer.writeInt(selectedY);
                 toServer.flush();
                 myTurn = false;
-                //int shot = fromServer.readInt();
-                switch (fromServer.readInt()) {
+                int shot = fromServer.readInt();
+                reportMove(shot);
+                switch (shot) {
                     case 0:
-                        systemOutput.append("\nMiss at " + target + "\nNext player's turn.");
+                        systemOutput.append("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
+                        break;
                     case 1:
                         systemOutput.append("\nHit at " + target + "\nNext player's turn.");
+                        break;
+                    case 2:
+                        systemOutput.append("\nYou Win!");
+                        break;
                 }
-
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -575,7 +582,30 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         }
     }
 
-    private void receiveAttack() {
+    private void receiveAttack() throws IOException {
+        int x = fromServer.readInt();
+        int y = fromServer.readInt();
+
+        switch (playerBoard[x][y]) {
+            case EMPTY://could change color of table, not currently doing so
+                break;
+            case OCCUPIED:
+                JLabel l = (JLabel) playerTable.findComponentAt(x, y);
+                l.setBackground(Color.red);
+
+        }
+
+    }
+
+    private void reportMove(int result) {
+        JLabel l = (JLabel) playerTable.findComponentAt(selectedX, selectedY);
+        switch (result) {
+            case 0:
+                l.setBackground(Color.blue);
+                break;
+            case 1:
+                l.setBackground(Color.red);
+        }
 
     }
 }
