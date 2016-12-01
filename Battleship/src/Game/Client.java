@@ -19,7 +19,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private Ship[] shipList;
     private Point target;
     private boolean ready = false;
-    private boolean actionPressed;
+    private boolean myTurn;
     private boolean isPlacementPhase;
     private int orientation = VERTICAL;
     private int selectedX, selectedY, length;
@@ -28,12 +28,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
      * Creates new form Client
      */
     public Client() {
-        actionPressed = false;
         playerBoard = new int[SIDE_LENGTH][SIDE_LENGTH];
         shipList = new Ship[SHIP_COUNT];
         initComponents();
-        fireButton.setEnabled(false);
-        
+
         try {
             Socket socket = new Socket("localhost", 8000);
             fromServer = new DataInputStream(socket.getInputStream());
@@ -338,7 +336,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 toServer.writeInt(selectedX);
                 toServer.writeInt(selectedY);
                 toServer.flush();
-
+                myTurn = false;
                 int shot = fromServer.readInt();
                 switch (shot) {
                     case 0:
@@ -347,26 +345,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                         systemOutput.append("\nHit at " + target + "\nNext player's turn.");
                 }
 
-            } catch (IOException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        else//placement phase button logic
-        {
-            try {
-                switch(verifyPlacement())
-                {
-                    case 1:
-                toServer.writeInt(playerTable.getSelectedColumn());
-                toServer.writeInt(playerTable.getSelectedRow());
-                toServer.writeInt(orientation);
-                toServer.writeInt(length);
-                break;
-                    case 2:
-                        systemOutput.setText("Cannot place over another ship, try again");
-                    case 3:
-                        systemOutput.setText("Would place the ship out of bounds, try again");
-                }
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -390,17 +368,35 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     }//GEN-LAST:event_opponentTableMouseClicked
 
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
-        selectedX = playerTable.getSelectedColumn() - 1;
-        selectedY = playerTable.getSelectedRow();
-        
-        systemOutput.append("Place ship at \"" + selectedX + ", " + selectedY + "\"?");
+        if (isPlacementPhase) {
+            try {
+                switch (verifyPlacement()) {
+                    case 1:
+                        toServer.writeInt(playerTable.getSelectedColumn() - 1);
+                        toServer.writeInt(playerTable.getSelectedRow());
+                        toServer.writeInt(orientation);
+                        toServer.writeInt(length);
+                        break;
+                    case 2:
+                        systemOutput.append("Cannot place over another ship, try again");
+                    case 3:
+                        systemOutput.append("Would place the ship out of bounds, try again");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_placeButtonActionPerformed
+    }
 
+    //performs logic for entire placement phase
     private void placeShips() throws IOException {
-        // indicates which ship is being placed
+        //enables placement based components and disables firing components
+        fireButton.setEnabled(false);
+        opponentTable.setEnabled(false);
         placeButton.setEnabled(true);
+        playerTable.setEnabled(true);
         for (int i = 0; i < shipList.length; i++) {
-                    fromServer.read();//recieves signal to begin each placement
+            fromServer.read();//recieves signal to begin each placement
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0:
@@ -428,9 +424,38 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                     systemOutput.setText("Placing Carrier: Size 5");
                     break;
             }
+            try {
+                waitForMove();//stalls until move is sent
+            } catch (Exception e)//does nothing over trivial exception case
+            {
+            }
+
         }
+        
+        //inverse of method start
         isPlacementPhase = false;
         placeButton.setEnabled(false);
+        playerTable.setEnabled(false);
+
+        fireButton.setEnabled(true);
+        opponentTable.setEnabled(true);
+
+    }
+
+    //places a single ship into the int array for tracking
+    public void placeShip() {
+        if (orientation == HORIZONTAL) {
+            for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
+            {
+                playerBoard[selectedX + jj][selectedY] = OCCUPIED;
+
+            }
+        } else {
+            for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
+            {
+                playerBoard[selectedX][selectedY + jj] = OCCUPIED;
+            }
+        }
     }
 
     /**
@@ -498,12 +523,30 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         try {
             isPlacementPhase = true;
             systemOutput.setText("Waiting for other player to connect");
-            fromServer.read();
+            fromServer.read();//recieves ping to start game
             placeShips();
 
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    //loops until the fire or place button is pressed
+    public void waitForMove() throws InterruptedException {
+        while (myTurn) {
+            Thread.sleep(50);
+        }
+        myTurn = true;
+    }
+
+    //recieves status of whether the other player has won, potentially reports if they sink a ship of yours
+    public int recieveStatus() {
+        return 0;
+    }
+
+    //recieves coords of opponent's attack to update GUI
+    public void recieveAttack() {
 
     }
 }

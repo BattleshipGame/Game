@@ -134,11 +134,11 @@ public class Server extends JFrame implements BattleshipData {
 
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
-                
+
                 player1Output.write(0);
                 player2Output.write(0);//sends ping to clients to indicate start of game
                 placeShips();
-                
+
                 int turnNumber = 1;
                 //lets players take turns firing at each other; broken when a player wins
                 while (true) {
@@ -209,70 +209,70 @@ public class Server extends JFrame implements BattleshipData {
                 System.err.println("client-server connection failed");
             }
         }
-        public void placeShips() throws IOException
-        {           
-                //runs 5 turns of placing ships 
-                for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                    player1Output.write(0);
-                    //adds a ship along a line using a coordinate, orientation, and ship size
-                    Point point = new Point(player1Input.readInt(), player1Input.readInt());
-                    int orientation = player1Input.readInt();
-                    int shipSize = player1Input.readInt();
-                    Point[] pointArray = new Point[shipSize];//stores the points to create a ship
 
-                    //if orientation is horizontal, starting point is on left 
-                    if (orientation == HORIZONTAL) {
-                        for (int jj = 0; jj < shipSize; jj++) {
-                            player1Board[point.x + jj][point.y] = OCCUPIED; //makes each location
-                            // along the line contain a ship tile
-                            pointArray[jj] = new Point(point.x + jj, point.y);
-                        }
-                    } else //verttical orientation, starts at top and extends downward
-                    {
-                        for (int jj = 0; jj < shipSize; jj++) {
-                            player1Board[point.x][point.y - jj] = OCCUPIED;
-                            pointArray[jj] = new Point(point.x, point.y - jj);
-                        }
-                        player1Ships[ii] = new Ship(pointArray);
+        public void placeShips() throws IOException {
+            //runs 5 turns of placing ships 
+            for (int ii = 0; ii < SHIP_COUNT; ii++) {
+                player1Output.write(0);
+                //adds a ship along a line using a coordinate, orientation, and ship size
+                int x = player1Input.readInt();
+                int y = player1Input.readInt();
+                Point point = new Point(x, y);
+                int orientation = player1Input.readInt();
+                int shipSize = player1Input.readInt();
+                Point[] pointArray = new Point[shipSize];//stores the points to create a ship
+
+                jta.append("Player 1 placed a ship at " + x + "," + y + " size: " + shipSize + " orientation: " + orientation);
+                //if orientation is horizontal, starting point is on left 
+                if (orientation == HORIZONTAL) {
+                    for (int jj = 0; jj < shipSize; jj++) {
+                        player1Board[point.x + jj][point.y] = OCCUPIED; //makes each location
+                        // along the line contain a ship tile
+                        pointArray[jj] = new Point(point.x + jj, point.y);
                     }
-
-                    point = new Point(player2Input.readInt(), player2Input.readInt());
-                    orientation = player2Input.readInt();
-                    shipSize = player2Input.readInt();
-                    pointArray = new Point[shipSize];//stores the points to create a ship
-
-                    //orientation of 1 is horizontal, starting point is on left 
-                    if (orientation == HORIZONTAL) {
-                        for (int jj = 0; jj < shipSize; jj++) {
-                            player2Board[point.x + jj][point.y] = OCCUPIED; //makes each location
-                            // along the line contain a ship tile
-                            pointArray[jj] = new Point(point.x + jj, point.y);
-                        }
-                    } else //verttical orientation, starts at top and extends downward
-                    {
-                        for (int jj = 0; jj < shipSize; jj++) {
-                            player2Board[point.x][point.y - jj] = OCCUPIED;
-                            pointArray[jj] = new Point(point.x, point.y - jj);
-                        }
-                        player2Ships[ii] = new Ship(pointArray);
+                } else //verttical orientation, starts at top and extends downward
+                {
+                    for (int jj = 0; jj < shipSize; jj++) {
+                        player1Board[point.x][point.y - jj] = OCCUPIED;
+                        pointArray[jj] = new Point(point.x, point.y - jj);
                     }
+                    player1Ships[ii] = new Ship(pointArray);
                 }
 
-        }
-        public void receivePlacement()
-        {
-            
+                player2Output.write(0);
+
+                point = new Point(player2Input.readInt(), player2Input.readInt());
+                orientation = player2Input.readInt();
+                shipSize = player2Input.readInt();
+                pointArray = new Point[shipSize];//stores the points to create a ship
+
+                //orientation of 1 is horizontal, starting point is on left 
+                if (orientation == HORIZONTAL) {
+                    for (int jj = 0; jj < shipSize; jj++) {
+                        player2Board[point.x + jj][point.y] = OCCUPIED; //makes each location
+                        // along the line contain a ship tile
+                        pointArray[jj] = new Point(point.x + jj, point.y);
+                    }
+                } else //verttical orientation, starts at top and extends downward
+                {
+                    for (int jj = 0; jj < shipSize; jj++) {
+                        player2Board[point.x][point.y - jj] = OCCUPIED;
+                        pointArray[jj] = new Point(point.x, point.y - jj);
+                    }
+                    player2Ships[ii] = new Ship(pointArray);
+                }
+            }
+
         }
         /**
-         * Checks to see if either player has won. Returns 1 if player 1 wins, 2 if player 2 wins, and 0 if no player
-         * wins on a turn
+         * Checks to see if either player has won. Returns 1 if player 1 wins, 2
+         * if player 2 wins, and 0 if no player wins on a turn
+         *
          * @return The victory value
          */
-        public int checkVictory()
-        {
-           return 0; 
+        public int checkVictory() {
+            return 0;
         }
-        
 
     }
 }
