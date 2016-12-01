@@ -15,7 +15,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private int[][] playerBoard;
     private DataOutputStream toServer;
     private DataInputStream fromServer;
-    private String playerName;
     private Ship[] shipList;
     private Point target;
     private boolean ready = false;
@@ -34,12 +33,11 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         shipList = new Ship[SHIP_COUNT];
         initComponents();
 
+        //Atempts to connect to Server and start Game
         try {
             Socket socket = new Socket("localhost", 8000);
             fromServer = new DataInputStream(socket.getInputStream());
             toServer = new DataOutputStream(socket.getOutputStream());
-
-            placeShips();
         } catch (IOException ex) {
             System.err.println(ex.toString() + '\n');
         }
@@ -320,16 +318,17 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //Tells the server this players name and ready status
+    //Tells the server this players ready status
     private void readyButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_readyButtonMouseClicked
         try {
             ready = true;
-            toServer.writeBoolean(true);
+            toServer.writeBoolean(ready);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_readyButtonMouseClicked
 
+    //Sends to the Server the locaiton at which was shot by this player
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
         if (!isPlacementPhase)//redundant check for proper phase, no real reason to remove
         {
@@ -354,6 +353,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
+    //Checks if the placement of the ships is to be veritcal or horizontal
     private void verticalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verticalCheckBoxActionPerformed
         // TODO add your handling code here:
         if (orientation == VERTICAL)//switches between vertical and horizontal ship placement
@@ -364,12 +364,14 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         }
     }//GEN-LAST:event_verticalCheckBoxActionPerformed
 
+    //Gets the coordinates from the opponenetTable's selected cell
     private void opponentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_opponentTableMouseClicked
         selectedX = opponentTable.getSelectedColumn();
         selectedY = opponentTable.getSelectedRow() + 1;
         targetLocation.setText(selectedX + ", " + selectedY);
     }//GEN-LAST:event_opponentTableMouseClicked
 
+    //Tells Server that the ship has been placed at the selected location of the playerTable
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
         if (isPlacementPhase) {
             try {

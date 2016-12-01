@@ -154,6 +154,7 @@ public class Server extends JFrame implements BattleshipData {
             }
         }
         
+        //Begins the phase of the turn where the player will shoot at a location of the enemy board
         public void runFiringPhase() throws IOException
         {
             //lets players take turns firing at each other; broken when a player wins
@@ -202,6 +203,7 @@ public class Server extends JFrame implements BattleshipData {
 
         }
 
+        //Places the ships of the players on the server side for operations
         public void placeShips() throws IOException {
             //runs 5 turns of placing ships 
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
