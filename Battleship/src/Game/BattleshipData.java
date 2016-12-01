@@ -17,7 +17,4 @@ public final int DESTROYED = 3;
 
 public final int VERTICAL = 0;
 public final int HORIZONTAL = 1;
-    
-    
-    
 }

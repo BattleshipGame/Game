@@ -332,7 +332,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //Sends to the Server the locaiton at which was shot by this player
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        if (!isPlacementPhase)//redundant check for proper phase, no real reason to remove
+        if (!isPlacementPhase && myTurn)//redundant check for proper phase, no real reason to remove
         {
             try {
                 fireButton.setEnabled(false);
@@ -367,7 +367,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //Tells Server that the ship has been placed at the selected location of the playerTable
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
-        if (isPlacementPhase) {
+        if (isPlacementPhase && myTurn) {
             try {
                 switch (verifyPlacement()) {
                     case 1:
@@ -378,9 +378,9 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                         toServer.writeInt(length);
                         break;
                     case 2:
-                        systemOutput.append("Cannot place over another ship, try again \n");
+                        systemOutput.setText("Cannot place over another ship, try again \n");
                     case 3:
-                        systemOutput.append("Would place the ship out of bounds, try again\n");
+                        systemOutput.setText("Would place the ship out of bounds, try again\n");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -395,7 +395,9 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         opponentTable.setEnabled(false);
         placeButton.setEnabled(true);
         playerTable.setEnabled(true);
+        verticalCheckBox.setEnabled(true);
         for (int i = 0; i < shipList.length; i++) {
+            systemOutput.setText("Waiting for opponent's placement");
             fromServer.read();//recieves signal to begin each placement
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
@@ -433,6 +435,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         }
 
         //inverse of method start
+        verticalCheckBox.setEnabled(false);
         isPlacementPhase = false;
         placeButton.setEnabled(false);
         playerTable.setEnabled(false);
@@ -459,7 +462,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 l.setBackground(Color.gray);
             }
         }
-        systemOutput.append("Waiting for other player");
+        systemOutput.setText("Waiting for other player");
     }
 
     /**
@@ -571,18 +574,18 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             case 1://TODO when either player wins
                 playing = false;
                 if (player == 1) {
-                    systemOutput.append("You Win!");
+                    systemOutput.setText("You Win!");
                 } else {
-                    systemOutput.append("You Lose.");
+                    systemOutput.setText("You Lose.");
                 }
                 break;
 
             case 2:
                 playing = false;
                 if (player == 2) {
-                    systemOutput.append("You Win!");
+                    systemOutput.setText("You Win!");
                 } else {
-                    systemOutput.append("You Lose.");
+                    systemOutput.setText("You Lose.");
                 }
                 break;
             default:
@@ -601,10 +604,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         switch (playerBoard[x][y]) {
             case EMPTY:
                 l.setBackground(Color.blue);
-                systemOutput.append("Other player missed");
+                systemOutput.setText("Other player missed");
                 break;
             case OCCUPIED:
-                systemOutput.append("Other player landed a hit");
+                systemOutput.setText("Other player landed a hit");
                 l.setBackground(Color.red);
 
         }
@@ -618,10 +621,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         switch (result) {
             case 0:
                 l.setBackground(Color.blue);
-                systemOutput.append("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
+                systemOutput.setText("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
                 break;
             case 1:
-                systemOutput.append("\nHit at " + target + "\nNext player's turn.");
+                systemOutput.setText("\nHit at " + target + "\nNext player's turn.");
                 l.setBackground(Color.red);
                 break;
         }

@@ -1,11 +1,5 @@
 package Game;
 
-import static Game.BattleshipData.DESTROYED;
-import static Game.BattleshipData.EMPTY;
-import static Game.BattleshipData.HORIZONTAL;
-import static Game.BattleshipData.MISS;
-import static Game.BattleshipData.OCCUPIED;
-import static Game.BattleshipData.SHIP_COUNT;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -142,8 +136,8 @@ public class Server extends JFrame implements BattleshipData {
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
 
-                player1Output.write(0);
-                player2Output.write(0);//sends ping to clients to indicate start of game
+                player1Output.write(1);
+                player2Output.write(2);//tells clients which player they are
                 placeShips();
                 runFiringPhase();
                 
@@ -207,7 +201,8 @@ public class Server extends JFrame implements BattleshipData {
         public void placeShips() throws IOException {
             //runs 5 turns of placing ships 
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                player1Output.write(0);
+                player1Output.writeInt(0);//sends ping
+                
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 int x = player1Input.readInt();
                 int y = player1Input.readInt();
