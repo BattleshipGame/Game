@@ -341,19 +341,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 toServer.writeInt(selectedY);
                 toServer.flush();
                 myTurn = false;
-                int shot = fromServer.readInt();
-                reportMove(shot);
-                switch (shot) {
-                    case 0:
-                        systemOutput.append("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
-                        break;
-                    case 1:
-                        systemOutput.append("\nHit at " + target + "\nNext player's turn.");
-                        break;
-                    case 2:
-                        systemOutput.append("\nYou Win!");
-                        break;
-                }
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -536,17 +523,18 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         try {
             isPlacementPhase = true;
             systemOutput.setText("Waiting for other player to connect");
-            fromServer.read();//recieves ping to start game
             placeShips();
 
             while (playing) {
                 if (player == 1)//TODO asign player value on connection
                 {
                     waitForMove();
+                    getAttackResult();
                     receiveStatus();
                 } else {
                     receiveStatus();
                     waitForMove();
+                    getAttackResult();
                 }
 
             }
@@ -574,39 +562,61 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
         switch (status) {
             case 1://TODO when either player wins
+                playing = false;
+                if (player == 1) {
+                    systemOutput.append("You Win!");
+                } else {
+                    systemOutput.append("You Lose.");
+                }
                 break;
+
             case 2:
+                playing = false;
+                if (player == 2) {
+                    systemOutput.append("You Win!");
+                } else {
+                    systemOutput.append("You Lose.");
+                }
                 break;
             default:
                 receiveAttack();
                 break;
 
         }
+        myTurn = true;
     }
 
     private void receiveAttack() throws IOException {
         int x = fromServer.readInt();
         int y = fromServer.readInt();
-
+        JLabel l = (JLabel) playerTable.findComponentAt(x, y);
+        
         switch (playerBoard[x][y]) {
-            case EMPTY://could change color of table, not currently doing so
+            case EMPTY:
+                l.setBackground(Color.blue);
+                systemOutput.append("Other player missed");
                 break;
             case OCCUPIED:
-                JLabel l = (JLabel) playerTable.findComponentAt(x, y);
+                systemOutput.append("Other player landed a hit");
                 l.setBackground(Color.red);
 
         }
 
     }
 
-    private void reportMove(int result) {
+    private void getAttackResult() throws IOException {
         JLabel l = (JLabel) playerTable.findComponentAt(selectedX, selectedY);
+        int result = fromServer.readInt();
+
         switch (result) {
             case 0:
                 l.setBackground(Color.blue);
+                systemOutput.append("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
                 break;
             case 1:
+                systemOutput.append("\nHit at " + target + "\nNext player's turn.");
                 l.setBackground(Color.red);
+                break;
         }
 
     }
