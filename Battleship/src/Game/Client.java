@@ -23,6 +23,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private boolean isPlacementPhase;
     private int orientation = VERTICAL;
     private int selectedX, selectedY, length;
+    private int player;
+    private boolean playing;
 
     /**
      * Creates new form Client
@@ -329,7 +331,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     }//GEN-LAST:event_readyButtonMouseClicked
 
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        if (!isPlacementPhase) {
+        if (!isPlacementPhase)//redundant check for proper phase, no real reason to remove
+        {
             try {
                 fireButton.setEnabled(false);
                 // toServer.write(target);
@@ -337,8 +340,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 toServer.writeInt(selectedY);
                 toServer.flush();
                 myTurn = false;
-                int shot = fromServer.readInt();
-                switch (shot) {
+                //int shot = fromServer.readInt();
+                switch (fromServer.readInt()) {
                     case 0:
                         systemOutput.append("\nMiss at " + target + "\nNext player's turn.");
                     case 1:
@@ -431,7 +434,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             }
 
         }
-        
+
         //inverse of method start
         isPlacementPhase = false;
         placeButton.setEnabled(false);
@@ -495,7 +498,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        new Client().setVisible(true);
+        Client client = new Client();
+        client.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -526,13 +530,28 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             fromServer.read();//recieves ping to start game
             placeShips();
 
+            while (playing) {
+                if (player == 1)//TODO asign player value on connection
+                {
+                    waitForMove();
+                    receiveStatus();
+                } else {
+                    receiveStatus();
+                    waitForMove();
+                }
+
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+
         }
 
     }
 
     //loops until the fire or place button is pressed
+    @SuppressWarnings("SleepWhileInLoop")
     public void waitForMove() throws InterruptedException {
         while (myTurn) {
             Thread.sleep(50);
@@ -540,13 +559,23 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         myTurn = true;
     }
 
-    //recieves status of whether the other player has won, potentially reports if they sink a ship of yours
-    public int recieveStatus() {
-        return 0;
+    //recieves coords of opponent's attack to update GUI
+    public void receiveStatus() throws IOException {
+        int status = fromServer.readInt();
+
+        switch (status) {
+            case 1://TODO when either player wins
+                break;
+            case 2:
+                break;
+            default:
+                receiveAttack();
+                break;
+
+        }
     }
 
-    //recieves coords of opponent's attack to update GUI
-    public void recieveAttack() {
+    private void receiveAttack() {
 
     }
 }

@@ -99,6 +99,7 @@ public class Server extends JFrame implements BattleshipData {
         //creates grids that store the status of each tile on both game boards
         private int[][] player1Board, player2Board;
         private Ship[] player1Ships, player2Ships;
+        private int turnNumber;
 
         /**
          * Construct a thread
@@ -110,6 +111,7 @@ public class Server extends JFrame implements BattleshipData {
             player2Board = new int[SIDE_LENGTH][SIDE_LENGTH];
             player1Ships = new Ship[SHIP_COUNT];
             player2Ships = new Ship[SHIP_COUNT];
+            turnNumber = 1;
 
             //initialize boards with empty tiles
             /*redundant as arrays have value 0/EMPTY by default
@@ -138,23 +140,33 @@ public class Server extends JFrame implements BattleshipData {
                 player1Output.write(0);
                 player2Output.write(0);//sends ping to clients to indicate start of game
                 placeShips();
-
-                int turnNumber = 1;
-                //lets players take turns firing at each other; broken when a player wins
+                runFiringPhase();
+                
+            } catch (IOException e) {
+                System.err.println("client-server connection failed");
+            }
+        }
+        
+        public void runFiringPhase() throws IOException
+        {
+            //lets players take turns firing at each other; broken when a player wins
                 while (true) {
-
-                    player1Output.writeChar(1);//sends a ping to the client
                     int x = player1Input.readInt();//receives the coordinates of player 1's attack
                     int y = player1Input.readInt();
 
-                    if (player2Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
+                    if (player2Board[x][y] == OCCUPIED)
                     //attacked tile
                     {
                         player2Board[x][y] = DESTROYED;
                         player1Output.writeInt(1);//sends confirmation of hit
-                    } else {
+                    } else if ( player2Board[x][y] == EMPTY)
+                    {
                         player2Board[x][y] = MISS;
                         player1Output.writeInt(0);//sends confirmation of miss
+                    }
+                    else//case if a player attacks a tile twice, currently sending a number without a response
+                    {
+                        player1Output.writeInt(3);
                     }
 
                     //check for p1 victory 
@@ -205,9 +217,6 @@ public class Server extends JFrame implements BattleshipData {
                     turnNumber++;
                 }
 
-            } catch (IOException e) {
-                System.err.println("client-server connection failed");
-            }
         }
 
         public void placeShips() throws IOException {
