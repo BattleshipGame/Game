@@ -1,4 +1,4 @@
-package Game;
+package Server;
 
 /**
  * Declares a Point within the player boards

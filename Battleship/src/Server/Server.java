@@ -1,8 +1,9 @@
-package Game;
+package Server;
 
-import static Game.BattleshipData.HORIZONTAL;
-import static Game.BattleshipData.OCCUPIED;
-import static Game.BattleshipData.SHIP_COUNT;
+import Game.Ship;
+import static Server.BattleshipData.HORIZONTAL;
+import static Server.BattleshipData.OCCUPIED;
+import static Server.BattleshipData.SHIP_COUNT;
 import java.io.*;
 import java.net.*;
 import java.util.*;

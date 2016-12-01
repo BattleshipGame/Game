@@ -1,5 +1,7 @@
 package Game;
 
+import Server.Point;
+import Server.BattleshipData;
 import java.io.*;
 import java.net.*;
 import java.util.logging.Level;

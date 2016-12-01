@@ -1,5 +1,7 @@
 package Game;
 
+import Server.Point;
+
 /**
  * Represents a ship on the game board
  * @author Maurice Ajluni
