@@ -1,6 +1,9 @@
 package Game;
 
+import static Game.BattleshipData.DESTROYED;
+import static Game.BattleshipData.EMPTY;
 import static Game.BattleshipData.HORIZONTAL;
+import static Game.BattleshipData.MISS;
 import static Game.BattleshipData.OCCUPIED;
 import static Game.BattleshipData.SHIP_COUNT;
 import java.io.*;
@@ -26,7 +29,8 @@ public class Server extends JFrame implements BattleshipData {
     DataInputStream player2Input;
     DataOutputStream player2Output;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         new Server();
     }
 
@@ -129,7 +133,8 @@ public class Server extends JFrame implements BattleshipData {
          */
         @Override
         public void run() {
-            try {
+            try 
+            {
                 // Create data input and output streams
                 player1Input = new DataInputStream(player1.getInputStream());
                 player1Output = new DataOutputStream(player1.getOutputStream());
@@ -142,7 +147,9 @@ public class Server extends JFrame implements BattleshipData {
                 placeShips();
                 runFiringPhase();
                 
-            } catch (IOException e) {
+            } 
+            catch (IOException e) 
+            {
                 System.err.println("client-server connection failed");
             }
         }
@@ -150,71 +157,47 @@ public class Server extends JFrame implements BattleshipData {
         public void runFiringPhase() throws IOException
         {
             //lets players take turns firing at each other; broken when a player wins
-                while (true) {
+                while (true) 
+                {
+                    player2Output.writeChar(1);//sends a ping to the client
                     int x = player1Input.readInt();//receives the coordinates of player 1's attack
                     int y = player1Input.readInt();
 
-                    if (player2Board[x][y] == OCCUPIED)
-                    //attacked tile
+                    switch (player2Board[x][y]) //assumes the player is not targeting an already attacked tile
                     {
-                        player2Board[x][y] = DESTROYED;
-                        player1Output.writeInt(1);//sends confirmation of hit
-                    } else if ( player2Board[x][y] == EMPTY)
-                    {
-                        player2Board[x][y] = MISS;
-                        player1Output.writeInt(0);//sends confirmation of miss
+                        case OCCUPIED:
+                            player2Board[x][y] = DESTROYED;
+                            player1Output.writeInt(1);//sends confirmation of hit
+                            break;
+                        case EMPTY:
+                            player2Board[x][y] = MISS;
+                            player1Output.writeInt(0);//sends confirmation of miss
+                            break;
+                    //case if a player attacks a tile twice, currently sending a number without a response
+                        default:
+                            player1Output.writeInt(3);
+                            break;
                     }
-                    else//case if a player attacks a tile twice, currently sending a number without a response
-                    {
-                        player1Output.writeInt(3);
-                    }
-
-                    //check for p1 victory 
-                    if (turnNumber > 13)//only checks once enough moves have been made to win
-                    {
-                        boolean p1Victory = true;
-                        for (Ship ship : player2Ships)//iterates through
-                        {
-                            p1Victory = p1Victory && ship.isSunk();
-
-                            if (p1Victory == false) {
-                                break;
-
-                                //TODO Write Victory code
-                            }
-                        }
-                    }
-
+                    
                     player1Output.writeChar(1);//sends a ping to the client
                     x = player2Input.readInt();//receives the coordinates of player 2's attack
                     y = player2Input.readInt();
 
-                    if (player1Board[x][y] == OCCUPIED)//assumes the player is not targeting an already
-                    //attacked tile
+                    switch (player1Board[x][y])//assumes the player is not targeting an already attacked tile
                     {
-                        player1Board[x][y] = DESTROYED;
-                        player2Output.writeInt(1);
-                    } else {
-                        player1Board[x][y] = MISS;
-                        player2Output.writeInt(0);
+                        case OCCUPIED:
+                            player1Board[x][y] = DESTROYED;
+                            player2Output.writeInt(1);//sends confirmation of hit
+                            break;
+                        case EMPTY:
+                            player1Board[x][y] = MISS;
+                            player2Output.writeInt(0);//sends confirmation of miss
+                            break;
+                    //case if a player attacks a tile twice, currently sending a number without a response
+                        default:
+                            player2Output.writeInt(3);
+                            break;
                     }
-
-                    if (turnNumber > 13)//only checks once enough moves have been made to win
-                    {
-                        boolean p1Victory = true;
-                        for (Ship ship : player2Ships)//iterates through
-                        {
-                            p1Victory = p1Victory && ship.isSunk();
-
-                            if (p1Victory == false) {
-                                break;
-
-                                //TODO Write Victory code
-                            }
-                        }
-                    }
-
-                    turnNumber++;
                 }
 
         }
@@ -245,7 +228,7 @@ public class Server extends JFrame implements BattleshipData {
                         player1Board[point.x][point.y - jj] = OCCUPIED;
                         pointArray[jj] = new Point(point.x, point.y - jj);
                     }
-                    player1Ships[ii] = new Ship(pointArray);
+                    //player1Ships[ii] = new Ship(pointArray){};
                 }
 
                 player2Output.write(0);
@@ -268,7 +251,7 @@ public class Server extends JFrame implements BattleshipData {
                         player2Board[point.x][point.y - jj] = OCCUPIED;
                         pointArray[jj] = new Point(point.x, point.y - jj);
                     }
-                    player2Ships[ii] = new Ship(pointArray);
+                    //player2Ships[ii] = new Ship(pointArray);
                 }
             }
 
@@ -279,7 +262,41 @@ public class Server extends JFrame implements BattleshipData {
          *
          * @return The victory value
          */
-        public int checkVictory() {
+        public int checkVictory() 
+        {
+            //check for p1 victory 
+            if (turnNumber > 13)//only checks once enough moves have been made to win
+            {
+                boolean p1Victory = true;
+                for (Ship ship : player2Ships)//iterates through
+                {
+                    p1Victory = p1Victory && ship.isSunk();
+
+                    if (p1Victory == false) 
+                    {
+                        break;
+
+                        //TODO Write Victory code
+                    }
+                }
+            }
+            //check for p2 victory 
+            if (turnNumber > 13)//only checks once enough moves have been made to win
+            {
+                boolean p2Victory = true;
+                for (Ship ship : player1Ships)//iterates through
+                {
+                    p2Victory = p2Victory && ship.isSunk();
+
+                    if (p2Victory == false) 
+                    {
+                        break;
+
+                        //TODO Write Victory code
+                    }
+                }
+            }
+            turnNumber++;
             return 0;
         }
 
