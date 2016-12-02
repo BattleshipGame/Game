@@ -17,7 +17,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private int[][] playerBoard;
     private DataOutputStream toServer;
     private DataInputStream fromServer;
-    private Ship[] shipList;
     private Point target;
     private boolean ready = false;
     private boolean myTurn;
@@ -32,7 +31,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
      */
     public Client() {
         playerBoard = new int[SIDE_LENGTH][SIDE_LENGTH];
-        shipList = new Ship[SHIP_COUNT];
         initComponents();
 
         //Atempts to connect to Server and start Game
@@ -128,7 +126,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             .addGroup(opponentPanelLayout.createSequentialGroup()
                 .addGap(124, 124, 124)
                 .addComponent(opponentLabel)
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
             .addGroup(opponentPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -180,6 +178,11 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         });
         playerTable.setCellSelectionEnabled(true);
         playerTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        playerTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playerTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(playerTable);
 
         javax.swing.GroupLayout playerPanelLayout = new javax.swing.GroupLayout(playerPanel);
@@ -189,7 +192,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addGap(135, 135, 135)
                 .addComponent(playerLabel)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
             .addGroup(playerPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -202,7 +205,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         outputPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -332,7 +335,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //Sends to the Server the locaiton at which was shot by this player
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        if (!isPlacementPhase && myTurn)//redundant check for proper phase, no real reason to remove
+        if (!isPlacementPhase && myTurn && opponentTable.getSelectedRow() != -1)
         {
             try {
                 fireButton.setEnabled(false);
@@ -344,6 +347,13 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+         else if (!myTurn) {
+            systemOutput.setText("Wait for your turn or sleep with the fishes");
+        }
+        else if (opponentTable.getSelectedRow() == -1)
+        {
+            systemOutput.setText("Select a position to place your ship");
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
@@ -364,10 +374,17 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         selectedY = opponentTable.getSelectedRow() + 1;
         targetLocation.setText(selectedX + ", " + selectedY);
     }//GEN-LAST:event_opponentTableMouseClicked
-
+private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
+{
+        selectedX = playerTable.getSelectedColumn();
+        selectedY = playerTable.getSelectedRow() + 1;
+        targetLocation.setText(selectedX + ", " + selectedY);
+}
     //Tells Server that the ship has been placed at the selected location of the playerTable
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
-        if (isPlacementPhase && myTurn) {
+        if (isPlacementPhase && myTurn && playerTable.getSelectedColumn() != -1) //only acts if the user is allowed
+            //and has a selected column
+        {
             try {
                 switch (verifyPlacement()) {
                     case 1:
@@ -386,19 +403,27 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_placeButtonActionPerformed
+        else if (!myTurn) {
+            systemOutput.setText("Wait for your turn or sleep with the fishes");
+        }
+        else if (playerTable.getSelectedRow() == -1)
+        {
+            systemOutput.setText("Select a position to place your ship");
+        }
     }
 
     //performs logic for entire placement phase
-    private void placeShips() throws IOException {
+    private void placeShips() throws IOException, InterruptedException {
         //enables placement based components and disables firing components
         fireButton.setEnabled(false);
         opponentTable.setEnabled(false);
         placeButton.setEnabled(true);
         playerTable.setEnabled(true);
         verticalCheckBox.setEnabled(true);
-        for (int i = 0; i < shipList.length; i++) {
+
+        for (int i = 0; i < SHIP_COUNT; i++) {
             systemOutput.setText("Waiting for opponent's placement");
-            fromServer.read();//recieves signal to begin each placement
+            fromServer.readInt();//recieves signal to begin each placement
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0:
@@ -426,12 +451,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                     systemOutput.setText("Placing Carrier: Size 5");
                     break;
             }
-            try {
                 waitForMove();//stalls until move is sent
-            } catch (Exception e)//does nothing over trivial exception case
-            {
-            }
-
         }
 
         //inverse of method start
@@ -530,9 +550,15 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     public void run() {
         try {
             player = fromServer.readInt();
+            this.setTitle("Battleship: Player " + player);
             isPlacementPhase = true;
             systemOutput.setText("Waiting for other player to connect");
-            fromServer.read();
+            if (player == 1) {
+                myTurn = true;
+            } else {
+                fromServer.read();
+            }
+
             placeShips();
 
             while (playing) {
@@ -600,7 +626,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         int x = fromServer.readInt();
         int y = fromServer.readInt();
         JLabel l = (JLabel) playerTable.findComponentAt(x, y);
-        
+
         switch (playerBoard[x][y]) {
             case EMPTY:
                 l.setBackground(Color.blue);

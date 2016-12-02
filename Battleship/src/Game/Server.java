@@ -1,5 +1,7 @@
 package Game;
 
+import static Game.BattleshipData.HORIZONTAL;
+import static Game.BattleshipData.OCCUPIED;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -17,14 +19,7 @@ public class Server extends JFrame implements BattleshipData {
 
     private int[][] player1Board, player2Board;
 
-    DataInputStream player1Input;
-    DataOutputStream player1Output;
-
-    DataInputStream player2Input;
-    DataOutputStream player2Output;
-
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         new Server();
     }
 
@@ -77,7 +72,7 @@ public class Server extends JFrame implements BattleshipData {
                         + clientNo++ + '\n');
 
                 // Create a new thread for this session of two players
-                HandleAClient task = new HandleAClient(player1, player2);
+                HandleClients task = new HandleClients(player1, player2);
 
                 // Start the new thread
                 new Thread(task).start();
@@ -89,10 +84,16 @@ public class Server extends JFrame implements BattleshipData {
 
     // Inner class
     // Define the thread class for handling new connection
-    class HandleAClient implements Runnable {
+    class HandleClients implements Runnable {
 
         private Socket player1; // A connected socket
         private Socket player2;
+
+        DataInputStream player1Input;
+        DataOutputStream player1Output;
+
+        DataInputStream player2Input;
+        DataOutputStream player2Output;
 
         //creates grids that store the status of each tile on both game boards
         private int[][] player1Board, player2Board;
@@ -102,7 +103,7 @@ public class Server extends JFrame implements BattleshipData {
         /**
          * Construct a thread
          */
-        public HandleAClient(Socket p1, Socket p2) {
+        public HandleClients(Socket p1, Socket p2) {
             this.player1 = p1;
             this.player2 = p2;
             player1Board = new int[SIDE_LENGTH][SIDE_LENGTH];
@@ -127,8 +128,7 @@ public class Server extends JFrame implements BattleshipData {
          */
         @Override
         public void run() {
-            try 
-            {
+            try {
                 // Create data input and output streams
                 player1Input = new DataInputStream(player1.getInputStream());
                 player1Output = new DataOutputStream(player1.getOutputStream());
@@ -136,64 +136,60 @@ public class Server extends JFrame implements BattleshipData {
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
 
-                player1Output.write(1);
-                player2Output.write(2);//tells clients which player they are
+                player1Output.writeInt(1);
+                player2Output.writeInt(2);//tells clients which player they are
                 placeShips();
                 runFiringPhase();
-                
-            } 
-            catch (IOException e) 
-            {
+
+            } catch (IOException e) {
                 System.err.println("client-server connection failed");
             }
         }
-        
+
         //Begins the phase of the turn where the player will shoot at a location of the enemy board
-        public void runFiringPhase() throws IOException
-        {
+        public void runFiringPhase() throws IOException {
             //lets players take turns firing at each other; broken when a player wins
-                while (true) 
+            while (true) {
+                player2Output.writeChar(1);//sends a ping to the client
+                int x = player1Input.readInt();//receives the coordinates of player 1's attack
+                int y = player1Input.readInt();
+
+                switch (player2Board[x][y]) //assumes the player is not targeting an already attacked tile
                 {
-                    player2Output.writeChar(1);//sends a ping to the client
-                    int x = player1Input.readInt();//receives the coordinates of player 1's attack
-                    int y = player1Input.readInt();
-
-                    switch (player2Board[x][y]) //assumes the player is not targeting an already attacked tile
-                    {
-                        case OCCUPIED:
-                            player2Board[x][y] = DESTROYED;
-                            player1Output.writeInt(1);//sends confirmation of hit
-                            break;
-                        case EMPTY:
-                            player2Board[x][y] = MISS;
-                            player1Output.writeInt(0);//sends confirmation of miss
-                            break;
+                    case OCCUPIED:
+                        player2Board[x][y] = DESTROYED;
+                        player1Output.writeInt(1);//sends confirmation of hit
+                        break;
+                    case EMPTY:
+                        player2Board[x][y] = MISS;
+                        player1Output.writeInt(0);//sends confirmation of miss
+                        break;
                     //case if a player attacks a tile twice, currently sending a number without a response
-                        default:
-                            player1Output.writeInt(3);
-                            break;
-                    }
-                    
-                    player1Output.writeChar(1);//sends a ping to the client
-                    x = player2Input.readInt();//receives the coordinates of player 2's attack
-                    y = player2Input.readInt();
-
-                    switch (player1Board[x][y])//assumes the player is not targeting an already attacked tile
-                    {
-                        case OCCUPIED:
-                            player1Board[x][y] = DESTROYED;
-                            player2Output.writeInt(1);//sends confirmation of hit
-                            break;
-                        case EMPTY:
-                            player1Board[x][y] = MISS;
-                            player2Output.writeInt(0);//sends confirmation of miss
-                            break;
-                    //case if a player attacks a tile twice, currently sending a number without a response
-                        default:
-                            player2Output.writeInt(3);
-                            break;
-                    }
+                    default:
+                        player1Output.writeInt(3);
+                        break;
                 }
+
+                player1Output.writeChar(1);//sends a ping to the client
+                x = player2Input.readInt();//receives the coordinates of player 2's attack
+                y = player2Input.readInt();
+
+                switch (player1Board[x][y])//assumes the player is not targeting an already attacked tile
+                {
+                    case OCCUPIED:
+                        player1Board[x][y] = DESTROYED;
+                        player2Output.writeInt(1);//sends confirmation of hit
+                        break;
+                    case EMPTY:
+                        player1Board[x][y] = MISS;
+                        player2Output.writeInt(0);//sends confirmation of miss
+                        break;
+                    //case if a player attacks a tile twice, currently sending a number without a response
+                    default:
+                        player2Output.writeInt(3);
+                        break;
+                }
+            }
 
         }
 
@@ -201,66 +197,57 @@ public class Server extends JFrame implements BattleshipData {
         public void placeShips() throws IOException {
             //runs 5 turns of placing ships 
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                player1Output.writeInt(0);//sends ping
-                
-                //adds a ship along a line using a coordinate, orientation, and ship size
-                int x = player1Input.readInt();
-                int y = player1Input.readInt();
-                Point point = new Point(x, y);
-                int orientation = player1Input.readInt();
-                int shipSize = player1Input.readInt();
-                Point[] pointArray = new Point[shipSize];//stores the points to create a ship
+                player1Output.write(0);//sends ping to let p1 start
 
-                jta.append("Player 1 placed a ship at " + x + "," + y + " size: " + shipSize + " orientation: " + orientation);
-                //if orientation is horizontal, starting point is on left 
-                if (orientation == HORIZONTAL) {
-                    for (int jj = 0; jj < shipSize; jj++) {
-                        player1Board[point.x + jj][point.y] = OCCUPIED; //makes each location
-                        // along the line contain a ship tile
-                        pointArray[jj] = new Point(point.x + jj, point.y);
-                    }
-                } else //verttical orientation, starts at top and extends downward
-                {
-                    for (int jj = 0; jj < shipSize; jj++) {
-                        player1Board[point.x][point.y - jj] = OCCUPIED;
-                        pointArray[jj] = new Point(point.x, point.y - jj);
-                    }
-                    //player1Ships[ii] = new Ship(pointArray){};
-                }
+                //adds a ship along a line using a coordinate, orientation, and ship size
+                placeShip(player1Board, player1Input.readInt(), player1Input.readInt(), player1Input.readInt(),
+                        player1Input.readInt());
 
                 player2Output.write(0);
+                player2Output.write(0);
+                placeShip(player2Board, player2Input.readInt(), player1Input.readInt(), player1Input.readInt(),
+                        player1Input.readInt());
+            }
+        }
 
-                point = new Point(player2Input.readInt(), player2Input.readInt());
-                orientation = player2Input.readInt();
-                shipSize = player2Input.readInt();
-                pointArray = new Point[shipSize];//stores the points to create a ship
+        public void placeShip(int[][] board, int x, int y, int orientation, int shipSize) {
+            //Point[] pointArray = new Point[shipSize];//stores the points to create a ship, may not even use ship
+            //objects
+            Point point = new Point(x, y);
 
-                //orientation of 1 is horizontal, starting point is on left 
-                if (orientation == HORIZONTAL) {
-                    for (int jj = 0; jj < shipSize; jj++) {
-                        player2Board[point.x + jj][point.y] = OCCUPIED; //makes each location
-                        // along the line contain a ship tile
-                        pointArray[jj] = new Point(point.x + jj, point.y);
-                    }
-                } else //verttical orientation, starts at top and extends downward
-                {
-                    for (int jj = 0; jj < shipSize; jj++) {
-                        player2Board[point.x][point.y - jj] = OCCUPIED;
-                        pointArray[jj] = new Point(point.x, point.y - jj);
-                    }
-                    //player2Ships[ii] = new Ship(pointArray);
+            String player;
+            if (board == player1Board) {
+                player = "Player 1 ";
+            } else {
+                player = "Player 2 ";
+            }
+
+            jta.append(player + "placed a ship at " + x + "," + y + " size: " + shipSize + " orientation: " + orientation);
+            //if orientation is horizontal, starting point is on left 
+            if (orientation == HORIZONTAL) {
+                for (int jj = 0; jj < shipSize; jj++) {
+                    board[point.x + jj][point.y] = OCCUPIED; //makes each location
+                    // along the line contain a ship tile
+                   // pointArray[jj] = new Point(point.x + jj, point.y);
                 }
+            } else //verttical orientation, starts at top and extends downward
+            {
+                for (int jj = 0; jj < shipSize; jj++) {
+                    board[point.x][point.y - jj] = OCCUPIED;
+                   // pointArray[jj] = new Point(point.x, point.y - jj);
+                }
+                //player1Ships[ii] = new Ship(pointArray){};
             }
 
         }
+
         /**
          * Checks to see if either player has won. Returns 1 if player 1 wins, 2
          * if player 2 wins, and 0 if no player wins on a turn
          *
          * @return The victory value
          */
-        public int checkVictory() 
-        {
+        public int checkVictory() {
             //check for p1 victory 
             if (turnNumber > 13)//only checks once enough moves have been made to win
             {
@@ -269,8 +256,7 @@ public class Server extends JFrame implements BattleshipData {
                 {
                     p1Victory = p1Victory && ship.isSunk();
 
-                    if (p1Victory == false) 
-                    {
+                    if (p1Victory == false) {
                         break;
 
                         //TODO Write Victory code
@@ -285,8 +271,7 @@ public class Server extends JFrame implements BattleshipData {
                 {
                     p2Victory = p2Victory && ship.isSunk();
 
-                    if (p2Victory == false) 
-                    {
+                    if (p2Victory == false) {
                         break;
 
                         //TODO Write Victory code
