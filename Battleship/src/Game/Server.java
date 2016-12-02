@@ -204,13 +204,7 @@ public class Server extends JFrame implements BattleshipData {
                 placeShip(player1Board, player1Input.readInt(), player1Input.readInt(), player1Input.readInt(),
                         player1Input.readInt());
 
-                jta.append("Player 2 has not yet placed a ship");
-                if(ii == 0)
-                {
-                player2Output.write(0);
-                }
-                player2Output.write(0);
-                jta.append("Player 2 has still not yet placed a ship");
+               // player2Output.write(0);
                 placeShip(player2Board, player2Input.readInt(), player1Input.readInt(), player1Input.readInt(),
                         player1Input.readInt());
             }

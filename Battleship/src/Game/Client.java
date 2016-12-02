@@ -27,6 +27,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private int selectedX, selectedY, length;
     private int player;
     private boolean playing;
+    private boolean waiting = true;
 
     /**
      * Creates new form Client
@@ -342,8 +343,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //Sends to the Server the locaiton at which was shot by this player
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        if (!isPlacementPhase && myTurn && opponentTable.getSelectedRow() != -1)
-        {
+        if (!isPlacementPhase && myTurn && selectedX != -1) {
             try {
                 fireButton.setEnabled(false);
                 // toServer.write(target);
@@ -351,16 +351,14 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 toServer.writeInt(selectedY);
                 toServer.flush();
                 myTurn = false;
+                waiting = false;
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-         else if (!myTurn) {
-            systemOutput.setText("Wait for your turn or sleep with the fishes");
-        }
-        else if (opponentTable.getSelectedRow() == -1)
-        {
-            systemOutput.setText("Select a position to place your ship");
+        } else if (!myTurn) {
+            systemOutput.append("\nWait for your turn or sleep with the fishes");
+        } else if (selectedY == -1) {
+            systemOutput.append("\nSelect a position to place your ship");
         }
     }//GEN-LAST:event_fireButtonMouseClicked
 
@@ -381,47 +379,52 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         selectedY = opponentTable.getSelectedRow() + 1;
         targetLocation.setText(selectedX + ", " + selectedY);
     }//GEN-LAST:event_opponentTableMouseClicked
-private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
-{
+    private void playerTableMouseClicked(java.awt.event.MouseEvent evt) {
         selectedX = playerTable.getSelectedColumn();
         selectedY = playerTable.getSelectedRow() + 1;
         targetLocation.setText(selectedX + ", " + selectedY);
-}
+    }
+
     //Tells Server that the ship has been placed at the selected location of the playerTable
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
 
     }//GEN-LAST:event_placeButtonActionPerformed
 
     private void placeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeButtonMouseClicked
-             if (isPlacementPhase && myTurn && !(playerTable.getSelectedColumn() == -1 ||
-                playerTable.getSelectedRow() == 0)) //only acts if the user is allowed
-            //and has selected a space on the board
+        if (isPlacementPhase && myTurn && !(selectedX == -1
+                || selectedY == 0)) //only acts if the user is allowed
+        //and has selected a space on the board
         {
             try {
                 switch (verifyPlacement()) {
                     case 1:
-                        placeShip();
-                        toServer.writeInt(playerTable.getSelectedColumn() - 1);
-                        toServer.writeInt(playerTable.getSelectedRow());
-                        toServer.writeInt(orientation);
-                        toServer.writeInt(length);
+                        int x = selectedX;
+                        int y = selectedY;
+                        int ori = orientation;
+                        int len = length;
+                           
+                        toServer.writeInt(x);
+                        toServer.writeInt(y);
+                        toServer.writeInt(ori);
+                        toServer.writeInt(len);
+                        
+                        placeShip(x, y , ori, length);
                         myTurn = false;
+                        waiting = false;
                         break;
                     case 2:
-                        systemOutput.setText("Cannot place over another ship, try again \n");
+                        systemOutput.append("\nCannot place over another ship, try again \n");
                     case 3:
-                        systemOutput.setText("Would place the ship out of bounds, try again\n");
+                        systemOutput.append("\nWould place the ship out of bounds, try again\n");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_placeButtonMouseClicked
         else if (!myTurn) {
-            systemOutput.setText("Wait for your turn or sleep with the fishes");
-        }
-        else if (playerTable.getSelectedColumn() == -1)
-        {
-            systemOutput.setText("Select a position on your board (right side) to place your ship");
+            systemOutput.append("\nWait for your turn or sleep with the fishes");
+        } else if (selectedX == -1) {
+            systemOutput.append("\nSelect a position on your board (right side) to place your ship");
         }
     }
 
@@ -435,37 +438,37 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
         verticalCheckBox.setEnabled(true);
 
         for (int i = 0; i < SHIP_COUNT; i++) {
-            systemOutput.setText("Waiting for opponent's placement");
+            systemOutput.append("\nWaiting for opponent's placement");
             fromServer.read();//recieves signal to begin each placement
             myTurn = true;
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0:
                     length = 2;
-                    systemOutput.setText("Placing Patrol Boat: Size 2");
+                    systemOutput.append("\nPlacing Patrol Boat: Size 2");
                     break;
 
                 case 1:
                     length = 3;
-                    systemOutput.setText("Placing Submarine #1: Size 3");
+                    systemOutput.append("\nPlacing Submarine #1: Size 3");
                     break;
 
                 case 2:
                     length = 3;
-                    systemOutput.setText("Placing Submarine #2: Size 3");
+                    systemOutput.append("\nPlacing Submarine #2: Size 3");
                     break;
 
                 case 3:
                     length = 4;
-                    systemOutput.setText("Placing Battleship: Size 4");
+                    systemOutput.append("\nPlacing Battleship: Size 4");
                     break;
 
                 case 4:
                     length = 5;
-                    systemOutput.setText("Placing Carrier: Size 5");
+                    systemOutput.append("\nPlacing Carrier: Size 5");
                     break;
             }
-                waitForMove();//stalls until move is sent
+            waitForMove();//stalls until move is sent
         }
 
         //inverse of method start
@@ -479,24 +482,24 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
 
     }
 
-    //places a single ship into the int array for tracking
-    public void placeShip() {
+    //places a single ship into the int array for tracking and attempts to color table cells
+    public void placeShip(int x, int y, int orientation, int length) {
         if (orientation == HORIZONTAL) {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
-                playerBoard[selectedX + jj][selectedY] = OCCUPIED;
-                Component c = playerTable.findComponentAt(selectedX + jj, selectedY);
+                playerBoard[x + jj][y] = OCCUPIED;
+                Component c = playerTable.findComponentAt(x + jj, y);
                 c.setBackground(Color.gray);
             }
         } else {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
-                playerBoard[selectedX][selectedY + jj] = OCCUPIED;
-                Component c = playerTable.findComponentAt(selectedX, selectedY + jj);
+                playerBoard[x][y - jj] = OCCUPIED;
+                Component c = playerTable.findComponentAt(x, y - jj);
                 c.setBackground(Color.gray);
             }
         }
-        systemOutput.setText("Waiting for other player");
+        systemOutput.append("\nWaiting for other player");
     }
 
     /**
@@ -566,13 +569,8 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
             player = fromServer.readInt();
             this.setTitle("Battleship: Player " + player);
             isPlacementPhase = true;
-            systemOutput.setText("Waiting for other player to connect");
-            fromServer.read();//receives ping for player to start
-            
-            if (player == 2) {
-                systemOutput.setText("Waiting for opponent's placement");
-                fromServer.read();
-            }
+            systemOutput.append("\nWaiting for other player to connect");
+            fromServer.read();//receives ping for player1 to start
 
             placeShips();
 
@@ -601,10 +599,10 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
     //loops until the fire or place button is pressed
     @SuppressWarnings("SleepWhileInLoop")
     public void waitForMove() throws InterruptedException {
-        while (myTurn) {
+        while (waiting) {
             Thread.sleep(50);
         }
-       // myTurn = true;
+        waiting = true;
     }
 
     //recieves coords of opponent's attack to update GUI
@@ -615,18 +613,18 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
             case 1://TODO when either player wins
                 playing = false;
                 if (player == 1) {
-                    systemOutput.setText("You Win!");
+                    systemOutput.append("\nYou Win!");
                 } else {
-                    systemOutput.setText("You Lose.");
+                    systemOutput.append("\nYou Lose.");
                 }
                 break;
 
             case 2:
                 playing = false;
                 if (player == 2) {
-                    systemOutput.setText("You Win!");
+                    systemOutput.append("\nYou Win!");
                 } else {
-                    systemOutput.setText("You Lose.");
+                    systemOutput.append("\nYou Lose.");
                 }
                 break;
             default:
@@ -645,10 +643,10 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
         switch (playerBoard[x][y]) {
             case EMPTY:
                 c.setBackground(Color.blue);
-                systemOutput.setText("Other player missed");
+                systemOutput.append("\nOther player missed");
                 break;
             case OCCUPIED:
-                systemOutput.setText("Other player landed a hit");
+                systemOutput.append("\nOther player landed a hit");
                 c.setBackground(Color.red);
 
         }
@@ -656,16 +654,16 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
     }
 
     private void getAttackResult() throws IOException {
-        Component c =  playerTable.findComponentAt(selectedX, selectedY);
+        Component c = playerTable.findComponentAt(selectedX, selectedY);
         int result = fromServer.readInt();
 
         switch (result) {
             case 0:
                 c.setBackground(Color.blue);
-                systemOutput.setText("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
+                systemOutput.append("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
                 break;
             case 1:
-                systemOutput.setText("\nHit at " + target + "\nNext player's turn.");
+                systemOutput.append("\nHit at " + target + "\nNext player's turn.");
                 c.setBackground(Color.red);
                 break;
         }
