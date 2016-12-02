@@ -211,18 +211,18 @@ public class Server extends JFrame implements BattleshipData {
             }
             jta.append("\nFinished placing p1 ships");
 
-            player2Output.writeInt(0);
+            player2Output.writeInt(0);//sends ping to let p1 start
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                // player2Output.writeInt(0);
-
-               int x = player1Input.readInt();
-               int y = player1Input.readInt();
-               int orientation = player1Input.readInt();
-               int length = player1Input.readInt();
+                int x = player2Input.readInt();//scoping variables locally, trying to avoid desync in data
+                //transfer
+                int y = player2Input.readInt();
+               int orientation = player2Input.readInt();
+               int length = player2Input.readInt();
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 placeShip(player2Board, x, y, orientation, length);
-                player2Output.writeInt(0);
+                player2Output.writeInt(0);//tells client that processing is finished
             }
+            jta.append("\nFinished placing p2 ships");
         }
 
         public void placeShip(int[][] board, int x, int y, int orientation, int length) {
