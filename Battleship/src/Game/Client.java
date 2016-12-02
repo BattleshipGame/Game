@@ -1,11 +1,13 @@
 package Game;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 
 /**
  * Runs the Client for the Battleship game
@@ -236,6 +238,11 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
         placeButton.setText("Place");
         placeButton.setEnabled(false);
+        placeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                placeButtonMouseClicked(evt);
+            }
+        });
         placeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 placeButtonActionPerformed(evt);
@@ -382,8 +389,13 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
 }
     //Tells Server that the ship has been placed at the selected location of the playerTable
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
-        if (isPlacementPhase && myTurn && playerTable.getSelectedColumn() != -1) //only acts if the user is allowed
-            //and has a selected column
+
+    }//GEN-LAST:event_placeButtonActionPerformed
+
+    private void placeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeButtonMouseClicked
+             if (isPlacementPhase && myTurn && !(playerTable.getSelectedColumn() == -1 ||
+                playerTable.getSelectedRow() == 0)) //only acts if the user is allowed
+            //and has selected a space on the board
         {
             try {
                 switch (verifyPlacement()) {
@@ -393,6 +405,7 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
                         toServer.writeInt(playerTable.getSelectedRow());
                         toServer.writeInt(orientation);
                         toServer.writeInt(length);
+                        myTurn = false;
                         break;
                     case 2:
                         systemOutput.setText("Cannot place over another ship, try again \n");
@@ -402,13 +415,13 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
-    }//GEN-LAST:event_placeButtonActionPerformed
+    }//GEN-LAST:event_placeButtonMouseClicked
         else if (!myTurn) {
             systemOutput.setText("Wait for your turn or sleep with the fishes");
         }
-        else if (playerTable.getSelectedRow() == -1)
+        else if (playerTable.getSelectedColumn() == -1)
         {
-            systemOutput.setText("Select a position to place your ship");
+            systemOutput.setText("Select a position on your board (right side) to place your ship");
         }
     }
 
@@ -423,7 +436,8 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
 
         for (int i = 0; i < SHIP_COUNT; i++) {
             systemOutput.setText("Waiting for opponent's placement");
-            fromServer.readInt();//recieves signal to begin each placement
+            fromServer.read();//recieves signal to begin each placement
+            myTurn = true;
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0:
@@ -471,15 +485,15 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
                 playerBoard[selectedX + jj][selectedY] = OCCUPIED;
-                JLabel l = (JLabel) playerTable.findComponentAt(selectedX + jj, selectedY);
-                l.setBackground(Color.gray);
+                Component c = playerTable.findComponentAt(selectedX + jj, selectedY);
+                c.setBackground(Color.gray);
             }
         } else {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
                 playerBoard[selectedX][selectedY + jj] = OCCUPIED;
-                JLabel l = (JLabel) playerTable.findComponentAt(selectedX, selectedY + jj);
-                l.setBackground(Color.gray);
+                Component c = playerTable.findComponentAt(selectedX, selectedY + jj);
+                c.setBackground(Color.gray);
             }
         }
         systemOutput.setText("Waiting for other player");
@@ -553,9 +567,10 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
             this.setTitle("Battleship: Player " + player);
             isPlacementPhase = true;
             systemOutput.setText("Waiting for other player to connect");
-            if (player == 1) {
-                myTurn = true;
-            } else {
+            fromServer.read();//receives ping for player to start
+            
+            if (player == 2) {
+                systemOutput.setText("Waiting for opponent's placement");
                 fromServer.read();
             }
 
@@ -589,7 +604,7 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
         while (myTurn) {
             Thread.sleep(50);
         }
-        myTurn = true;
+       // myTurn = true;
     }
 
     //recieves coords of opponent's attack to update GUI
@@ -625,33 +640,33 @@ private void playerTableMouseClicked(java.awt.event.MouseEvent evt)
     private void receiveAttack() throws IOException {
         int x = fromServer.readInt();
         int y = fromServer.readInt();
-        JLabel l = (JLabel) playerTable.findComponentAt(x, y);
+        Component c = playerTable.findComponentAt(x, y);
 
         switch (playerBoard[x][y]) {
             case EMPTY:
-                l.setBackground(Color.blue);
+                c.setBackground(Color.blue);
                 systemOutput.setText("Other player missed");
                 break;
             case OCCUPIED:
                 systemOutput.setText("Other player landed a hit");
-                l.setBackground(Color.red);
+                c.setBackground(Color.red);
 
         }
 
     }
 
     private void getAttackResult() throws IOException {
-        JLabel l = (JLabel) playerTable.findComponentAt(selectedX, selectedY);
+        Component c =  playerTable.findComponentAt(selectedX, selectedY);
         int result = fromServer.readInt();
 
         switch (result) {
             case 0:
-                l.setBackground(Color.blue);
+                c.setBackground(Color.blue);
                 systemOutput.setText("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
                 break;
             case 1:
                 systemOutput.setText("\nHit at " + target + "\nNext player's turn.");
-                l.setBackground(Color.red);
+                c.setBackground(Color.red);
                 break;
         }
 

@@ -28,7 +28,7 @@ public class Server extends JFrame implements BattleshipData {
         setLayout(new BorderLayout());
         add(new JScrollPane(jta), BorderLayout.CENTER);
         setTitle("Battleship Server");
-        setSize(500, 300);
+        setSize(500, 150);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true); // It is necessary to show the frame here!
 
@@ -54,7 +54,7 @@ public class Server extends JFrame implements BattleshipData {
 
                 // Notify that the player is Player 1
                 new DataOutputStream(
-                        player1.getOutputStream()).writeInt(1);//was originally a constant defined as 1
+                        player1.getOutputStream()).writeInt(1);
                 // Connect to player 2
                 Socket player2 = serverSocket.accept();
 
@@ -65,7 +65,7 @@ public class Server extends JFrame implements BattleshipData {
 
                 // Notify that the player is Player 2
                 new DataOutputStream(
-                        player2.getOutputStream()).writeInt(2);//see comment above
+                        player2.getOutputStream()).writeInt(2);
 
                 // Display this session and increment session number
                 jta.append(new Date() + ": Start a thread for session "
@@ -136,8 +136,9 @@ public class Server extends JFrame implements BattleshipData {
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
 
-                player1Output.writeInt(1);
-                player2Output.writeInt(2);//tells clients which player they are
+                player1Output.write(0);
+                player2Output.write(0);//pings both clients once they are connected
+                
                 placeShips();
                 runFiringPhase();
 
@@ -203,8 +204,13 @@ public class Server extends JFrame implements BattleshipData {
                 placeShip(player1Board, player1Input.readInt(), player1Input.readInt(), player1Input.readInt(),
                         player1Input.readInt());
 
+                jta.append("Player 2 has not yet placed a ship");
+                if(ii == 0)
+                {
                 player2Output.write(0);
+                }
                 player2Output.write(0);
+                jta.append("Player 2 has still not yet placed a ship");
                 placeShip(player2Board, player2Input.readInt(), player1Input.readInt(), player1Input.readInt(),
                         player1Input.readInt());
             }
@@ -213,7 +219,7 @@ public class Server extends JFrame implements BattleshipData {
         public void placeShip(int[][] board, int x, int y, int orientation, int shipSize) {
             //Point[] pointArray = new Point[shipSize];//stores the points to create a ship, may not even use ship
             //objects
-            Point point = new Point(x, y);
+           // Point point = new Point(x, y);
 
             String player;
             if (board == player1Board) {
@@ -226,14 +232,13 @@ public class Server extends JFrame implements BattleshipData {
             //if orientation is horizontal, starting point is on left 
             if (orientation == HORIZONTAL) {
                 for (int jj = 0; jj < shipSize; jj++) {
-                    board[point.x + jj][point.y] = OCCUPIED; //makes each location
-                    // along the line contain a ship tile
+                    board[x + jj][y] = OCCUPIED; //makes each location along the line contain a ship tile
                    // pointArray[jj] = new Point(point.x + jj, point.y);
                 }
             } else //verttical orientation, starts at top and extends downward
             {
                 for (int jj = 0; jj < shipSize; jj++) {
-                    board[point.x][point.y - jj] = OCCUPIED;
+                    board[x][y - jj] = OCCUPIED;
                    // pointArray[jj] = new Point(point.x, point.y - jj);
                 }
                 //player1Ships[ii] = new Ship(pointArray){};
