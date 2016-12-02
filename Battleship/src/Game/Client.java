@@ -123,6 +123,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             }
         });
         jScrollPane3.setViewportView(opponentTable);
+        opponentTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         javax.swing.GroupLayout opponentPanelLayout = new javax.swing.GroupLayout(opponentPanel);
         opponentPanel.setLayout(opponentPanelLayout);
@@ -377,7 +378,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         targetLocation.setText(selectedX + ", " + selectedY);
     }//GEN-LAST:event_opponentTableMouseClicked
     private void playerTableMouseClicked(java.awt.event.MouseEvent evt) {
-       /* selectedX = playerTable.getSelectedColumn();
+        /* selectedX = playerTable.getSelectedColumn();
         selectedY = playerTable.getSelectedRow() + 1;
         targetLocation.setText(selectedX + ", " + selectedY);*/
     }
@@ -424,7 +425,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private void placeShips() throws IOException, InterruptedException {
         Random rand = new Random();
 
-        fromServer.read();
+        fromServer.readInt();
         systemOutput.append("\nGenerating ships");
         for (int i = 0; i < SHIP_COUNT; i++) {
 
@@ -452,34 +453,29 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                     length = 5;
                     break;
             }
-            
+
             boolean placed = false;
             while (!placed)//loops until a random ship is valid
             {
                 int orientation = rand.nextInt(2);
-                int x;
-                int y;
+                int x = -99;
+                int y = -99;
 
                 if (orientation == VERTICAL)//attempts to avoid placements that will never be valid
                 {
                     x = rand.nextInt(10);
-                    y = rand.nextInt(10 - length);
-                } else {
-                    x = rand.nextInt(10 - length);
+                    y = rand.nextInt(10 - length + 1);
+                } else if (orientation == HORIZONTAL) {
+                    x = rand.nextInt(10 - length + 1);
                     y = rand.nextInt(10);
                 }
 
-                if (verifyPlacement(x, y, orientation, length) == 1)
-                {
-                        placeShip(x, y, orientation, length);
-                        toServer.writeInt(x);
-                        toServer.writeInt(y);
-                        toServer.writeInt(orientation);
-                        toServer.writeInt(length);
-                        placed = true;
+                if (verifyPlacement(x, y, orientation, length) == 1) {
+                    placed = true;
+                    placeShip(x, y, orientation, length);
                 }
             }
-
+            fromServer.readInt();//reads value to wait on server processing
         }
 
         systemOutput.append("\nDone generating ships");
@@ -494,22 +490,22 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         toServer.writeInt(y);
         toServer.writeInt(orientation);
         toServer.writeInt(length);
-        
+
         systemOutput.append("\nplaced a ship at " + x + "," + y + " size: " + length + " orientation: " + orientation);
 
         if (orientation == HORIZONTAL) {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
                 playerBoard[x + jj][y] = OCCUPIED;
-                Component c = playerTable.findComponentAt(x + jj, y);
-                c.setBackground(Color.gray);
+                //Component c = playerTable.findComponentAt(x + jj + 1, y);
+                // c.setBackground(Color.gray);
             }
-        } else {
+        } else if (orientation == VERTICAL) {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
-                playerBoard[x][y - jj] = OCCUPIED;
-                Component c = playerTable.findComponentAt(x, y - jj);
-                c.setBackground(Color.gray);
+                playerBoard[x][y + jj] = OCCUPIED;
+                // Component c = playerTable.findComponentAt(x + 1, y + jj);
+                // c.setBackground(Color.gray);
             }
         }
     }
@@ -579,11 +575,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             player = fromServer.readInt();
             this.setTitle("Battleship: Player " + player);
             systemOutput.append("\nWaiting for other player to connect");
-                fromServer.read();//receives start ping
-                if(player == 2)
-                {
+            fromServer.readInt();//receives start ping
+            if (player == 2) {
                 systemOutput.append("\nWaiting for other player's ship generation");
-                        }
+            }
 
             placeShips();
             fireButton.setEnabled(true);

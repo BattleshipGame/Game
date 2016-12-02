@@ -137,8 +137,8 @@ public class Server extends JFrame implements BattleshipData {
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
                 
-                player1Output.write(0);
-                player2Output.write(0);//pings both clients once they are connected
+                player1Output.writeInt(0);
+                player2Output.writeInt(0);//pings both clients once they are connected
 
                 placeShips();
                 runFiringPhase();
@@ -197,30 +197,31 @@ public class Server extends JFrame implements BattleshipData {
 
         //Places the ships of the players on the server side for operations
         public void placeShips() throws IOException {
-            int x, y, orientation, length;
             //runs 5 turns of placing ships 
-            player1Output.write(0);//sends ping to let p1 star
+            player1Output.writeInt(0);//sends ping to let p1 start
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
-
-                x = player1Input.readInt();
-                y = player1Input.readInt();
-                orientation = player1Input.readInt();
-                length = player1Input.readInt();
+                int x = player1Input.readInt();//scoping variables locally, trying to avoid desync in data
+                //transfer
+                int y = player1Input.readInt();
+               int orientation = player1Input.readInt();
+               int length = player1Input.readInt();
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 placeShip(player1Board, x, y, orientation, length);
+                player1Output.writeInt(0);//tells client that processing is finished
             }
             jta.append("\nFinished placing p1 ships");
 
-            player2Output.write(0);
+            player2Output.writeInt(0);
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                // player2Output.write(0);
+                // player2Output.writeInt(0);
 
-                x = player1Input.readInt();
-                y = player1Input.readInt();
-                orientation = player1Input.readInt();
-                length = player1Input.readInt();
+               int x = player1Input.readInt();
+               int y = player1Input.readInt();
+               int orientation = player1Input.readInt();
+               int length = player1Input.readInt();
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 placeShip(player2Board, x, y, orientation, length);
+                player2Output.writeInt(0);
             }
         }
 
