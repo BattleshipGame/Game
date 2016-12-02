@@ -7,14 +7,14 @@ import java.net.*;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
-import javax.swing.JTable;
 
 /**
- *Encountered bug in main build, this branch was a last ditch attempt to progress by generating ships randomly
- * instead of having users place them manually. As such, it loops for an extremely long time while placing ships
- * due to a lack of testing and development time. Original, manual placement paradigm is found in the master branch
- * of the Git repo. -Chris
+ * Encountered bug in main build, this branch was a last ditch attempt to
+ * progress by generating ships randomly instead of having users place them
+ * manually. As such, it loops for an extremely long time while placing ships
+ * due to a lack of testing and development time. Original, manual placement
+ * paradigm is found in the master branch of the Git repo. -Chris
+ *
  * @author Maurice Ajluni, Abdul Arif, Chris Cody
  */
 public class Client extends javax.swing.JFrame implements BattleshipData, Runnable {
@@ -377,9 +377,9 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         targetLocation.setText(selectedX + ", " + selectedY);
     }//GEN-LAST:event_opponentTableMouseClicked
     private void playerTableMouseClicked(java.awt.event.MouseEvent evt) {
-        selectedX = playerTable.getSelectedColumn();
+       /* selectedX = playerTable.getSelectedColumn();
         selectedY = playerTable.getSelectedRow() + 1;
-        targetLocation.setText(selectedX + ", " + selectedY);
+        targetLocation.setText(selectedX + ", " + selectedY);*/
     }
 
     //Tells Server that the ship has been placed at the selected location of the playerTable
@@ -423,10 +423,11 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     //performs logic for entire placement phase
     private void placeShips() throws IOException, InterruptedException {
         Random rand = new Random();
-       
+
+        fromServer.read();
         systemOutput.append("\nGenerating ships");
         for (int i = 0; i < SHIP_COUNT; i++) {
-            fromServer.read();
+
             int length = 0;
 
             switch (i)//determines which ship to place, currently going from smallest to largest
@@ -451,27 +452,25 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                     length = 5;
                     break;
             }
+            
             boolean placed = false;
             while (!placed)//loops until a random ship is valid
             {
-                int orientation = rand.nextInt(1) + 1;
+                int orientation = rand.nextInt(2);
                 int x;
                 int y;
-                
-                if(orientation == VERTICAL)//attempts to avoid placements that will never be valid
-                {
-                    x = rand.nextInt(9) + 1;
-                    y = rand.nextInt(9) + 1 - length;
-                }
-                else
-                {
-                    x = rand.nextInt(9) + 1 - length;
-                    y = rand.nextInt(9) + 1;
-                }
-                
 
-                switch (verifyPlacement(x, y, orientation, length)) {
-                    case 1:
+                if (orientation == VERTICAL)//attempts to avoid placements that will never be valid
+                {
+                    x = rand.nextInt(10);
+                    y = rand.nextInt(10 - length);
+                } else {
+                    x = rand.nextInt(10 - length);
+                    y = rand.nextInt(10);
+                }
+
+                if (verifyPlacement(x, y, orientation, length) == 1)
+                {
                         placeShip(x, y, orientation, length);
                         toServer.writeInt(x);
                         toServer.writeInt(y);
@@ -483,7 +482,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
         }
 
-    systemOutput.append("\nDone generating ships");
+        systemOutput.append("\nDone generating ships");
         fireButton.setEnabled(true);
         opponentTable.setEnabled(true);
 
@@ -495,6 +494,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         toServer.writeInt(y);
         toServer.writeInt(orientation);
         toServer.writeInt(length);
+        
+        systemOutput.append("\nplaced a ship at " + x + "," + y + " size: " + length + " orientation: " + orientation);
 
         if (orientation == HORIZONTAL) {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
@@ -522,28 +523,26 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
      * put the ship out of bounds.
      */
     private int verifyPlacement(int x, int y, int orientation, int length) {
-        int result = 1;
-
         try {
             if (orientation == HORIZONTAL) {
                 for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
                 {
                     if (playerBoard[selectedX + jj][selectedY] == OCCUPIED) {
-                        result = 2;
+                        return 2;
                     }
                 }
             } else {
                 for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
                 {
                     if (playerBoard[selectedX][selectedY + jj] == OCCUPIED) {
-                        result = 2;
+                        return 2;
                     }
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            result = 3;
+            return 3;
         }
-        return result;
+        return 1;
     }
 
     /**
@@ -580,11 +579,11 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             player = fromServer.readInt();
             this.setTitle("Battleship: Player " + player);
             systemOutput.append("\nWaiting for other player to connect");
-
-            if (player == 1) {
                 fromServer.read();//receives start ping
-                myTurn = true;
-            }
+                if(player == 2)
+                {
+                systemOutput.append("\nWaiting for other player's ship generation");
+                        }
 
             placeShips();
             fireButton.setEnabled(true);

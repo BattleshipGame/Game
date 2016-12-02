@@ -2,6 +2,7 @@ package Game;
 
 import static Game.BattleshipData.HORIZONTAL;
 import static Game.BattleshipData.OCCUPIED;
+import static Game.BattleshipData.SHIP_COUNT;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -135,10 +136,10 @@ public class Server extends JFrame implements BattleshipData {
 
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
-
+                
                 player1Output.write(0);
                 player2Output.write(0);//pings both clients once they are connected
-                
+
                 placeShips();
                 runFiringPhase();
 
@@ -196,26 +197,37 @@ public class Server extends JFrame implements BattleshipData {
 
         //Places the ships of the players on the server side for operations
         public void placeShips() throws IOException {
+            int x, y, orientation, length;
             //runs 5 turns of placing ships 
+            player1Output.write(0);//sends ping to let p1 star
             for (int ii = 0; ii < SHIP_COUNT; ii++) {
-                player1Output.write(0);//sends ping to let p1 start
 
+                x = player1Input.readInt();
+                y = player1Input.readInt();
+                orientation = player1Input.readInt();
+                length = player1Input.readInt();
                 //adds a ship along a line using a coordinate, orientation, and ship size
-                placeShip(player1Board, player1Input.readInt(), player1Input.readInt(), player1Input.readInt(),
-                        player1Input.readInt());
-                
-                player2Output.write(0);
+                placeShip(player1Board, x, y, orientation, length);
+            }
+            jta.append("\nFinished placing p1 ships");
 
-               // player2Output.write(0);
-                placeShip(player2Board, player2Input.readInt(), player1Input.readInt(), player1Input.readInt(),
-                        player1Input.readInt());
+            player2Output.write(0);
+            for (int ii = 0; ii < SHIP_COUNT; ii++) {
+                // player2Output.write(0);
+
+                x = player1Input.readInt();
+                y = player1Input.readInt();
+                orientation = player1Input.readInt();
+                length = player1Input.readInt();
+                //adds a ship along a line using a coordinate, orientation, and ship size
+                placeShip(player2Board, x, y, orientation, length);
             }
         }
 
         public void placeShip(int[][] board, int x, int y, int orientation, int length) {
             //Point[] pointArray = new Point[length];//stores the points to create a ship, may not even use ship
             //objects
-           // Point point = new Point(x, y);
+            // Point point = new Point(x, y);
 
             String player;
             if (board == player1Board) {
@@ -229,15 +241,19 @@ public class Server extends JFrame implements BattleshipData {
             if (orientation == HORIZONTAL) {
                 for (int jj = 0; jj < length; jj++) {
                     board[x + jj][y] = OCCUPIED; //makes each location along the line contain a ship tile
-                   // pointArray[jj] = new Point(point.x + jj, point.y);
+                    // pointArray[jj] = new Point(point.x + jj, point.y);
                 }
-            } else //verttical orientation, starts at top and extends downward
+            } else if (orientation == VERTICAL) //verttical orientation, starts at top and extends downward
             {
                 for (int jj = 0; jj < length; jj++) {
-                    board[x][y - jj] = OCCUPIED;
-                   // pointArray[jj] = new Point(point.x, point.y - jj);
+                    board[x][y + jj] = OCCUPIED;
+                    // pointArray[jj] = new Point(point.x, point.y - jj);
                 }
                 //player1Ships[ii] = new Ship(pointArray){};
+            }
+            else
+            {
+                jta.append("\nAnamolous orientation input");
             }
 
         }
