@@ -203,6 +203,8 @@ public class Server extends JFrame implements BattleshipData {
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 placeShip(player1Board, player1Input.readInt(), player1Input.readInt(), player1Input.readInt(),
                         player1Input.readInt());
+                
+                player2Output.write(0);
 
                // player2Output.write(0);
                 placeShip(player2Board, player2Input.readInt(), player1Input.readInt(), player1Input.readInt(),
@@ -210,8 +212,8 @@ public class Server extends JFrame implements BattleshipData {
             }
         }
 
-        public void placeShip(int[][] board, int x, int y, int orientation, int shipSize) {
-            //Point[] pointArray = new Point[shipSize];//stores the points to create a ship, may not even use ship
+        public void placeShip(int[][] board, int x, int y, int orientation, int length) {
+            //Point[] pointArray = new Point[length];//stores the points to create a ship, may not even use ship
             //objects
            // Point point = new Point(x, y);
 
@@ -222,16 +224,16 @@ public class Server extends JFrame implements BattleshipData {
                 player = "Player 2 ";
             }
 
-            jta.append(player + "placed a ship at " + x + "," + y + " size: " + shipSize + " orientation: " + orientation);
+            jta.append("\n" + player + "placed a ship at " + x + "," + y + " size: " + length + " orientation: " + orientation);
             //if orientation is horizontal, starting point is on left 
             if (orientation == HORIZONTAL) {
-                for (int jj = 0; jj < shipSize; jj++) {
+                for (int jj = 0; jj < length; jj++) {
                     board[x + jj][y] = OCCUPIED; //makes each location along the line contain a ship tile
                    // pointArray[jj] = new Point(point.x + jj, point.y);
                 }
             } else //verttical orientation, starts at top and extends downward
             {
-                for (int jj = 0; jj < shipSize; jj++) {
+                for (int jj = 0; jj < length; jj++) {
                     board[x][y - jj] = OCCUPIED;
                    // pointArray[jj] = new Point(point.x, point.y - jj);
                 }

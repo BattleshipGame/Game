@@ -4,15 +4,18 @@ import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
 /**
- * Runs the Client for the Battleship game
- *
- * @author Maurice Ajluni
+ *Encountered bug in main build, this branch was a last ditch attempt to progress by generating ships randomly
+ * instead of having users place them manually. As such, it loops for an extremely long time while placing ships
+ * due to a lack of testing and development time. Original, manual placement paradigm is found in the master branch
+ * of the Git repo. -Chris
+ * @author Maurice Ajluni, Abdul Arif, Chris Cody
  */
 public class Client extends javax.swing.JFrame implements BattleshipData, Runnable {
 
@@ -23,8 +26,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private boolean ready = false;
     private boolean myTurn;
     private boolean isPlacementPhase;
-    private int orientation = VERTICAL;
-    private int selectedX, selectedY, length;
+    private int selectedX, selectedY;
     private int player;
     private boolean playing;
     private boolean waiting = true;
@@ -365,12 +367,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     //Checks if the placement of the ships is to be veritcal or horizontal
     private void verticalCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verticalCheckBoxActionPerformed
         // TODO add your handling code here:
-        if (orientation == VERTICAL)//switches between vertical and horizontal ship placement
-        {
-            orientation = HORIZONTAL;
-        } else {
-            orientation = VERTICAL;
-        }
+
     }//GEN-LAST:event_verticalCheckBoxActionPerformed
 
     //Gets the coordinates from the opponenetTable's selected cell
@@ -391,7 +388,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     }//GEN-LAST:event_placeButtonActionPerformed
 
     private void placeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeButtonMouseClicked
-        if (isPlacementPhase && myTurn && !(selectedX == -1
+        /*if (isPlacementPhase && myTurn && !(selectedX == -1
                 || selectedY == 0)) //only acts if the user is allowed
         //and has selected a space on the board
         {
@@ -402,13 +399,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                         int y = selectedY;
                         int ori = orientation;
                         int len = length;
-                           
-                        toServer.writeInt(x);
-                        toServer.writeInt(y);
-                        toServer.writeInt(ori);
-                        toServer.writeInt(len);
                         
-                        placeShip(x, y , ori, length);
+                        placeShip(x, y , ori, len);
                         myTurn = false;
                         waiting = false;
                         break;
@@ -425,65 +417,85 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             systemOutput.append("\nWait for your turn or sleep with the fishes");
         } else if (selectedX == -1) {
             systemOutput.append("\nSelect a position on your board (right side) to place your ship");
-        }
+        }*/
     }
 
     //performs logic for entire placement phase
     private void placeShips() throws IOException, InterruptedException {
-        //enables placement based components and disables firing components
-        fireButton.setEnabled(false);
-        opponentTable.setEnabled(false);
-        placeButton.setEnabled(true);
-        playerTable.setEnabled(true);
-        verticalCheckBox.setEnabled(true);
-
+        Random rand = new Random();
+       
+        systemOutput.append("\nGenerating ships");
         for (int i = 0; i < SHIP_COUNT; i++) {
-            systemOutput.append("\nWaiting for opponent's placement");
-            fromServer.read();//recieves signal to begin each placement
-            myTurn = true;
+            fromServer.read();
+            int length = 0;
+
             switch (i)//determines which ship to place, currently going from smallest to largest
             {
                 case 0:
                     length = 2;
-                    systemOutput.append("\nPlacing Patrol Boat: Size 2");
                     break;
 
                 case 1:
                     length = 3;
-                    systemOutput.append("\nPlacing Submarine #1: Size 3");
                     break;
 
                 case 2:
                     length = 3;
-                    systemOutput.append("\nPlacing Submarine #2: Size 3");
                     break;
 
                 case 3:
                     length = 4;
-                    systemOutput.append("\nPlacing Battleship: Size 4");
                     break;
 
                 case 4:
                     length = 5;
-                    systemOutput.append("\nPlacing Carrier: Size 5");
                     break;
             }
-            waitForMove();//stalls until move is sent
+            boolean placed = false;
+            while (!placed)//loops until a random ship is valid
+            {
+                int orientation = rand.nextInt(1) + 1;
+                int x;
+                int y;
+                
+                if(orientation == VERTICAL)//attempts to avoid placements that will never be valid
+                {
+                    x = rand.nextInt(9) + 1;
+                    y = rand.nextInt(9) + 1 - length;
+                }
+                else
+                {
+                    x = rand.nextInt(9) + 1 - length;
+                    y = rand.nextInt(9) + 1;
+                }
+                
+
+                switch (verifyPlacement(x, y, orientation, length)) {
+                    case 1:
+                        placeShip(x, y, orientation, length);
+                        toServer.writeInt(x);
+                        toServer.writeInt(y);
+                        toServer.writeInt(orientation);
+                        toServer.writeInt(length);
+                        placed = true;
+                }
+            }
+
         }
 
-        //inverse of method start
-        verticalCheckBox.setEnabled(false);
-        isPlacementPhase = false;
-        placeButton.setEnabled(false);
-        playerTable.setEnabled(false);
-
+    systemOutput.append("\nDone generating ships");
         fireButton.setEnabled(true);
         opponentTable.setEnabled(true);
 
     }
 
     //places a single ship into the int array for tracking and attempts to color table cells
-    public void placeShip(int x, int y, int orientation, int length) {
+    public void placeShip(int x, int y, int orientation, int length) throws IOException {
+        toServer.writeInt(x);
+        toServer.writeInt(y);
+        toServer.writeInt(orientation);
+        toServer.writeInt(length);
+
         if (orientation == HORIZONTAL) {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
             {
@@ -499,7 +511,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 c.setBackground(Color.gray);
             }
         }
-        systemOutput.append("\nWaiting for other player");
     }
 
     /**
@@ -510,7 +521,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
      * due to collision with another ship, and 3 if the attempted placement will
      * put the ship out of bounds.
      */
-    private int verifyPlacement() {
+    private int verifyPlacement(int x, int y, int orientation, int length) {
         int result = 1;
 
         try {
@@ -568,11 +579,15 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         try {
             player = fromServer.readInt();
             this.setTitle("Battleship: Player " + player);
-            isPlacementPhase = true;
             systemOutput.append("\nWaiting for other player to connect");
-            fromServer.read();//receives ping for player1 to start
+
+            if (player == 1) {
+                fromServer.read();//receives start ping
+                myTurn = true;
+            }
 
             placeShips();
+            fireButton.setEnabled(true);
 
             while (playing) {
                 if (player == 1)//TODO asign player value on connection
