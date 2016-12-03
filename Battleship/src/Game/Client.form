@@ -307,9 +307,6 @@
                   <JTableSelectionModel selectionMode="0"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="playerTableMouseClicked"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -337,12 +334,7 @@
                           <Component id="targetLocation" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
                           <Component id="fireButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="verticalCheckBox" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="placeButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="readyButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -354,12 +346,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="fireButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="readyButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="placeButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="verticalCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="fireButton" min="-2" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="targetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="targetLocation" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -406,35 +393,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="-,-"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="readyButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Ready"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="readyButtonMouseClicked"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="placeButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Place"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="placeButtonMouseClicked"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="placeButtonActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="verticalCheckBox">
-          <Properties>
-            <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" value="Vertical"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="verticalCheckBoxActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

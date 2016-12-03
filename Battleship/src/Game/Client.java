@@ -28,7 +28,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private boolean isPlacementPhase;
     private int selectedX, selectedY;
     private int player;
-    private boolean playing;
+    private boolean playing = true;
     private boolean waiting = true;
 
     /**
@@ -346,7 +346,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //Sends to the Server the locaiton at which was shot by this player
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        if (!isPlacementPhase && myTurn && selectedX != -1) {
+        if ( myTurn && selectedX != -1) {
             try {
                 fireButton.setEnabled(false);
                 // toServer.write(target);
@@ -491,7 +491,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
         toServer.writeInt(orientation);
         toServer.writeInt(length);
 
-        systemOutput.append("\nplaced a ship at " + x + "," + y + " size: " + length + " orientation: " + orientation);
+        systemOutput.append("\nplaced a ship at " + (x + 1) + "," + (y + 1) + " size: " + length + " orientation: " + orientation);
 
         if (orientation == HORIZONTAL) {
             for (int jj = 0; jj < length; jj++)//iterates through each point along the attempted placement's line
@@ -581,18 +581,19 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             }
 
             placeShips();
+            if (player == 1) {
+                myTurn = true;
+            }
             fireButton.setEnabled(true);
 
             while (playing) {
                 if (player == 1)//TODO asign player value on connection
                 {
                     waitForMove();
-                    getAttackResult();
                     receiveStatus();
                 } else {
                     receiveStatus();
                     waitForMove();
-                    getAttackResult();
                 }
 
             }
@@ -608,6 +609,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     //loops until the fire or place button is pressed
     @SuppressWarnings("SleepWhileInLoop")
     public void waitForMove() throws InterruptedException {
+        systemOutput.append("\nYour move");
         while (waiting) {
             Thread.sleep(50);
         }
@@ -622,18 +624,18 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             case 1://TODO when either player wins
                 playing = false;
                 if (player == 1) {
-                    systemOutput.append("\nYou Win!");
+                    systemOutput.setText("\nYou Win!");
                 } else {
-                    systemOutput.append("\nYou Lose.");
+                    systemOutput.setText("\nYou Lose.");
                 }
                 break;
 
             case 2:
                 playing = false;
                 if (player == 2) {
-                    systemOutput.append("\nYou Win!");
+                    systemOutput.setText("\nYou Win!");
                 } else {
-                    systemOutput.append("\nYou Lose.");
+                    systemOutput.setText("\nYou Lose.");
                 }
                 break;
             default:
@@ -647,34 +649,17 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private void receiveAttack() throws IOException {
         int x = fromServer.readInt();
         int y = fromServer.readInt();
-        Component c = playerTable.findComponentAt(x, y);
+       // Component c = playerTable.findComponentAt(x, y);
 
         switch (playerBoard[x][y]) {
             case EMPTY:
-                c.setBackground(Color.blue);
-                systemOutput.append("\nOther player missed");
+               // c.paint(g);
+                systemOutput.append("\nOther player missed at " + x + "," + y);
                 break;
             case OCCUPIED:
-                systemOutput.append("\nOther player landed a hit");
-                c.setBackground(Color.red);
+                systemOutput.append("\nOther player landed a hit " + x + "," + y);
+               // c.setBackground(Color.red);
 
-        }
-
-    }
-
-    private void getAttackResult() throws IOException {
-        Component c = playerTable.findComponentAt(selectedX, selectedY);
-        int result = fromServer.readInt();
-
-        switch (result) {
-            case 0:
-                c.setBackground(Color.blue);
-                systemOutput.append("\nMiss at " + selectedX + "," + selectedY + "\nNext player's turn.");
-                break;
-            case 1:
-                systemOutput.append("\nHit at " + target + "\nNext player's turn.");
-                c.setBackground(Color.red);
-                break;
         }
 
     }
