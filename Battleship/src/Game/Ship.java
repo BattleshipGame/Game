@@ -5,7 +5,7 @@ import java.io.Serializable;
  * Represents a ship on the game board
  * @author Maurice Ajluni
  */
-public abstract class Ship
+public class Ship
 {
     int size;
     Point[] coordinates;

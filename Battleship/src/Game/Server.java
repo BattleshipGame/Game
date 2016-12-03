@@ -136,7 +136,7 @@ public class Server extends JFrame implements BattleshipData {
 
                 player2Input = new DataInputStream(player2.getInputStream());
                 player2Output = new DataOutputStream(player2.getOutputStream());
-                
+
                 player1Output.writeInt(0);
                 player2Output.writeInt(0);//pings both clients once they are connected
 
@@ -152,7 +152,6 @@ public class Server extends JFrame implements BattleshipData {
         public void runFiringPhase() throws IOException {
             //lets players take turns firing at each other; broken when a player wins
             while (true) {
-                player2Output.writeChar(1);//sends a ping to the client
                 int x = player1Input.readInt();//receives the coordinates of player 1's attack
                 int y = player1Input.readInt();
 
@@ -203,8 +202,8 @@ public class Server extends JFrame implements BattleshipData {
                 int x = player1Input.readInt();//scoping variables locally, trying to avoid desync in data
                 //transfer
                 int y = player1Input.readInt();
-               int orientation = player1Input.readInt();
-               int length = player1Input.readInt();
+                int orientation = player1Input.readInt();
+                int length = player1Input.readInt();
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 placeShip(player1Board, x, y, orientation, length);
                 player1Output.writeInt(0);//tells client that processing is finished
@@ -216,8 +215,8 @@ public class Server extends JFrame implements BattleshipData {
                 int x = player2Input.readInt();//scoping variables locally, trying to avoid desync in data
                 //transfer
                 int y = player2Input.readInt();
-               int orientation = player2Input.readInt();
-               int length = player2Input.readInt();
+                int orientation = player2Input.readInt();
+                int length = player2Input.readInt();
                 //adds a ship along a line using a coordinate, orientation, and ship size
                 placeShip(player2Board, x, y, orientation, length);
                 player2Output.writeInt(0);//tells client that processing is finished
@@ -237,7 +236,7 @@ public class Server extends JFrame implements BattleshipData {
                 player = "Player 2 ";
             }
 
-            jta.append("\n" + player + "placed a ship at " + x + "," + y + " size: " + length + " orientation: " + orientation);
+            jta.append("\n" + player + "placed a ship at " + (x + 1) + "," + (y + 1) + " size: " + length + " orientation: " + orientation);
             //if orientation is horizontal, starting point is on left 
             if (orientation == HORIZONTAL) {
                 for (int jj = 0; jj < length; jj++) {
@@ -251,9 +250,7 @@ public class Server extends JFrame implements BattleshipData {
                     // pointArray[jj] = new Point(point.x, point.y - jj);
                 }
                 //player1Ships[ii] = new Ship(pointArray){};
-            }
-            else
-            {
+            } else {
                 jta.append("\nAnamolous orientation input");
             }
 
@@ -265,39 +262,28 @@ public class Server extends JFrame implements BattleshipData {
          *
          * @return The victory value
          */
-        public int checkVictory() {
-            //check for p1 victory 
-            if (turnNumber > 13)//only checks once enough moves have been made to win
+        public boolean checkVictory(int[][] targetBoard) {
+
+            boolean p1Victory = true;
+            int count = 0;
+            for (int ii = 0; ii < SIDE_LENGTH; ii++)//iterates through
             {
-                boolean p1Victory = true;
-                for (Ship ship : player2Ships)//iterates through
+                for(int jj = 0; jj < SIDE_LENGTH; jj++)
                 {
-                    p1Victory = p1Victory && ship.isSunk();
-
-                    if (p1Victory == false) {
-                        break;
-
-                        //TODO Write Victory code
+                    if(targetBoard[ii][jj] == DESTROYED)
+                    {
+                        count++;
                     }
-                }
+                }     
             }
-            //check for p2 victory 
-            if (turnNumber > 13)//only checks once enough moves have been made to win
+            if(count == 17)
             {
-                boolean p2Victory = true;
-                for (Ship ship : player1Ships)//iterates through
-                {
-                    p2Victory = p2Victory && ship.isSunk();
-
-                    if (p2Victory == false) {
-                        break;
-
-                        //TODO Write Victory code
-                    }
-                }
+                return true;
             }
-            turnNumber++;
-            return 0;
+            else
+            {
+            return false; 
+            }
         }
 
     }
