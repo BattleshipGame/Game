@@ -170,8 +170,18 @@ public class Server extends JFrame implements BattleshipData {
                         player1Output.writeInt(3);
                         break;
                 }
+                
+                if(checkVictory(player2Board)){//player 1 wins
+                    player1Output.writeInt(1);
+                    player2Output.writeInt(1);
+                }
+                else
+                {
+                    player2Output.writeInt(3);//signals no end to game
+                    player2Output.writeInt(x);
+                    player2Output.writeInt(y);
+                }
 
-                player1Output.writeChar(1);//sends a ping to the client
                 x = player2Input.readInt();//receives the coordinates of player 2's attack
                 y = player2Input.readInt();
 
@@ -190,6 +200,18 @@ public class Server extends JFrame implements BattleshipData {
                         player2Output.writeInt(3);
                         break;
                 }
+                
+                if(checkVictory(player1Board)){//player 2 wins
+                    player1Output.writeInt(1);
+                    player2Output.writeInt(1);
+                }
+                else
+                {
+                    player1Output.writeInt(3);//signals no end to game
+                    player1Output.writeInt(x);
+                    player1Output.writeInt(y);
+                }
+                turnNumber++;
             }
 
         }
@@ -263,27 +285,20 @@ public class Server extends JFrame implements BattleshipData {
          * @return The victory value
          */
         public boolean checkVictory(int[][] targetBoard) {
-
-            boolean p1Victory = true;
+            if(turnNumber < 17)
+            {
+                return false;
+            }
             int count = 0;
             for (int ii = 0; ii < SIDE_LENGTH; ii++)//iterates through
             {
-                for(int jj = 0; jj < SIDE_LENGTH; jj++)
-                {
-                    if(targetBoard[ii][jj] == DESTROYED)
-                    {
+                for (int jj = 0; jj < SIDE_LENGTH; jj++) {
+                    if (targetBoard[ii][jj] == DESTROYED) {
                         count++;
                     }
-                }     
+                }
             }
-            if(count == 17)
-            {
-                return true;
-            }
-            else
-            {
-            return false; 
-            }
+            return count == 17;
         }
 
     }

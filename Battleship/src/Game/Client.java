@@ -346,13 +346,14 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //Sends to the Server the locaiton at which was shot by this player
     private void fireButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fireButtonMouseClicked
-        if ( myTurn && selectedX != -1) {
+        if (myTurn && selectedX != -1) {
             try {
                 fireButton.setEnabled(false);
                 // toServer.write(target);
                 toServer.writeInt(selectedX);
                 toServer.writeInt(selectedY);
                 toServer.flush();
+                reportAttack();
                 myTurn = false;
                 waiting = false;
             } catch (IOException ex) {
@@ -387,7 +388,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private void placeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placeButtonActionPerformed
 
     }//GEN-LAST:event_placeButtonActionPerformed
-
+//from previous version but netbeans won't allow deletion
     private void placeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_placeButtonMouseClicked
         /*if (isPlacementPhase && myTurn && !(selectedX == -1
                 || selectedY == 0)) //only acts if the user is allowed
@@ -581,10 +582,9 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             }
 
             placeShips();
-            if (player == 1) {
-                myTurn = true;
+            if (player == 2) {
+                systemOutput.append("\nWaiting for player 1");
             }
-            fireButton.setEnabled(true);
 
             while (playing) {
                 if (player == 1)//TODO asign player value on connection
@@ -609,7 +609,10 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     //loops until the fire or place button is pressed
     @SuppressWarnings("SleepWhileInLoop")
     public void waitForMove() throws InterruptedException {
-        systemOutput.append("\nYour move");
+        systemOutput.append("\nYour turn");
+        fireButton.setEnabled(true);
+        myTurn = true;
+
         while (waiting) {
             Thread.sleep(50);
         }
@@ -618,7 +621,8 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
     //recieves coords of opponent's attack to update GUI
     public void receiveStatus() throws IOException {
-        int status = fromServer.readInt();
+        systemOutput.append("\nWaiting for other player");
+        int status = fromServer.readInt(); 
 
         switch (status) {
             case 1://TODO when either player wins
@@ -643,24 +647,40 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 break;
 
         }
-        myTurn = true;
+        
     }
 
     private void receiveAttack() throws IOException {
         int x = fromServer.readInt();
         int y = fromServer.readInt();
-       // Component c = playerTable.findComponentAt(x, y);
+        // Component c = playerTable.findComponentAt(x, y);
 
         switch (playerBoard[x][y]) {
             case EMPTY:
-               // c.paint(g);
+                // c.paint(g);
                 systemOutput.append("\nOther player missed at " + x + "," + y);
                 break;
             case OCCUPIED:
                 systemOutput.append("\nOther player landed a hit " + x + "," + y);
-               // c.setBackground(Color.red);
+            // c.setBackground(Color.red);
 
         }
 
+    }
+
+    private void reportAttack() throws IOException { 
+        int result = fromServer.readInt();
+        switch(result)
+        {
+            case 0:
+                systemOutput.append("\nMiss at " + selectedX + "," + selectedY); 
+                break;
+            case 1: 
+                systemOutput.append("\nHit at " + selectedX + "," + selectedY); 
+                break;
+            case 3:
+                systemOutput.append("\nYou already fired at " + selectedX + "," + selectedY);
+                break;
+        }
     }
 }
