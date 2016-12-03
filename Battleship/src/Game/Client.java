@@ -622,7 +622,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     //recieves coords of opponent's attack to update GUI
     public void receiveStatus() throws IOException {
         systemOutput.append("\nWaiting for other player");
-        int status = fromServer.readInt(); 
+        int status = fromServer.readInt();
 
         switch (status) {
             case 1://TODO when either player wins
@@ -647,7 +647,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
                 break;
 
         }
-        
+
     }
 
     private void receiveAttack() throws IOException {
@@ -657,26 +657,26 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
         switch (playerBoard[x][y]) {
             case EMPTY:
-                // c.paint(g);
+                // Component c = playerTable.findComponentAt(x, y);
+                // Component c = playerTable.findComponentAt(x, y);
                 systemOutput.append("\nOther player missed at " + x + "," + y);
                 break;
             case OCCUPIED:
                 systemOutput.append("\nOther player landed a hit " + x + "," + y);
-            // c.setBackground(Color.red);
+            // c.paint(g);
+            // c.paint(g);
 
         }
-
     }
 
-    private void reportAttack() throws IOException { 
+    private void reportAttack() throws IOException {
         int result = fromServer.readInt();
-        switch(result)
-        {
+        switch (result) {
             case 0:
-                systemOutput.append("\nMiss at " + selectedX + "," + selectedY); 
+                systemOutput.append("\nMiss at " + selectedX + "," + selectedY);
                 break;
-            case 1: 
-                systemOutput.append("\nHit at " + selectedX + "," + selectedY); 
+            case 1:
+                systemOutput.append("\nHit at " + selectedX + "," + selectedY);
                 break;
             case 3:
                 systemOutput.append("\nYou already fired at " + selectedX + "," + selectedY);
