@@ -7,6 +7,9 @@ import java.net.*;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Encountered bug in main build, this branch was a last ditch attempt to
@@ -37,7 +40,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     public Client() {
         playerBoard = new int[SIDE_LENGTH][SIDE_LENGTH];
         initComponents();
-
+        
         //Atempts to connect to Server and start Game
         try {
             Socket socket = new Socket("localhost", 8000);
@@ -426,7 +429,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
     private void placeShips() throws IOException, InterruptedException {
         Random rand = new Random();
 
-        fromServer.readInt();
+        fromServer.readInt();//clear to start placing ships
         systemOutput.append("\nGenerating ships");
         for (int i = 0; i < SHIP_COUNT; i++) {
 
@@ -460,7 +463,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             {
                 int orientation = rand.nextInt(2);
                 int x = -99;
-                int y = -99;
+                int y = -99;//initializes to strange values just in case generation goes wrong
 
                 if (orientation == VERTICAL)//attempts to avoid placements that will never be valid
                 {
@@ -481,7 +484,7 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
 
         systemOutput.append("\nDone generating ships");
         fireButton.setEnabled(true);
-        opponentTable.setEnabled(true);
+        opponentTable.setEnabled(true);//enables firing phase GUI elements
 
     }
 
@@ -582,9 +585,6 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             }
 
             placeShips();
-            if (player == 2) {
-                systemOutput.append("\nWaiting for player 1");
-            }
 
             while (playing) {
                 if (player == 1)//TODO asign player value on connection
@@ -681,6 +681,29 @@ public class Client extends javax.swing.JFrame implements BattleshipData, Runnab
             case 3:
                 systemOutput.append("\nYou already fired at " + selectedX + "," + selectedY);
                 break;
+        }
+    }
+
+    private class CustomCellRenderer extends DefaultTableCellRenderer {
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int x, int y) {
+
+            //Cells are by default rendered as a JLabel.
+            JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, x, y);
+
+            if (playerBoard[x][y] == OCCUPIED) {
+                l.setBackground(Color.GRAY);
+            } else if (playerBoard[x][y] == MISS) {
+                l.setBackground(Color.BLUE);
+            } else if (playerBoard[x][y] == DESTROYED) {
+                l.setBackground(Color.RED);
+            } else {
+                l.setBackground(Color.WHITE);
+            }
+
+            //Return the JLabel which renders the cell.
+            return l;
+
         }
     }
 }
